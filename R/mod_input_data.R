@@ -66,9 +66,9 @@ mod_input_data_server <- function(id){
       )
     })
 
-  dat_adjusted <- reactive( dat_raw() ) # ignoring hdexaminer for now
+  dat <- reactive( dat_raw() ) # ignoring hdexaminer for now
 
-
+  return(dat)
 
 })
 

@@ -20,7 +20,40 @@ app_ui <- function(request) {
           mod_input_data_ui("input_data"),
           mod_fit_parameters_ui("fit_parameters")
         ),
-        mainPanel()
+        mainPanel(
+          tabsetPanel(
+            tabPanel(
+              "Overview",
+              fluidPage(
+                fluidRow(
+                  column(
+                    width = 9, 
+                    plotOutput("plot_cov_class_plot")
+                  )
+                ),
+                fluidRow(
+                  column(
+                    width = 3,
+                    plotOutput("get_params_summary_image_plot"),
+                    plotOutput("plot_start_params_plot")),
+                  column(
+                    width = 3, 
+                    plotOutput("plot_3_exp_map_v2_plot"),
+                    plotOutput("plot_n_plot")
+                  ),
+                  column(
+                    width = 3, 
+                    plotOutput("plot_r2_hist_plot")
+                  )
+                )
+              )
+              ),
+            tabPanel(
+              "Params",
+              DT::dataTableOutput("params_list_data")
+            )
+          )
+        )
       )
 
 
