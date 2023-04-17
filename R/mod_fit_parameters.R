@@ -19,9 +19,9 @@ mod_fit_parameters_ui <- function(id){
     splitLayout(
       div("For three-exp fit:", br(),
           "0 < n = 0.33 < 1         ", br(),
-          "1 < k = 1 < 30        ", br(),
+          "1 < k = 2 < 30        ", br(),
           "0.1 < k = 0.1  < 1       ", br(),
-          "0.01 < k = 0.01 < 0.1    ", br()
+          "0 < k = 0.01 < 0.1    ", br()
       ),
       div("For one-exp fit:", br(),
           "0 < n = 0.33 < 1", br(),
@@ -30,8 +30,8 @@ mod_fit_parameters_ui <- function(id){
     ),
     br(),
     div("Control:", br(),
-        "Max iteration: ", br(),
-        "Method:", br()),
+        "Max iteration: 1000 ", br(),
+        "Scale: levenberg", br()),
     div("")
 )
 

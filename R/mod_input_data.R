@@ -13,8 +13,8 @@ mod_input_data_ui <- function(id){
   ns <- NS(id)
 
   wellPanel(
-    fillRow(
-      flex = c(NA, 1),
+    # fillRow(
+      # flex = c(NA, 1),
       fileInput(
         inputId = ns("data_file"),
         label = "Choose file:",
@@ -30,7 +30,7 @@ mod_input_data_ui <- function(id){
           verbatimTextOutput(ns("data_file_info"))
         )
       )
-    )
+    # )
   )
 
 }
