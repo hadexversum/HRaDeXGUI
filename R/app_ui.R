@@ -18,7 +18,14 @@ app_ui <- function(request) {
           br(),
           br(),
           mod_input_data_ui("input_data"),
-          mod_fit_parameters_ui("fit_parameters")
+          span("Be careful! This app is still under development.", style="color:red"),
+          br(),
+          br(),
+          mod_settings_workflow_ui("workflow"),
+          br(),
+          mod_settings_class_definition_ui("class_definition"),
+          br(),
+          mod_settings_fit_ui("settings_fit_control")
         ),
         mainPanel(
           tabsetPanel(
