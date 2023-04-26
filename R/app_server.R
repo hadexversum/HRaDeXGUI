@@ -14,13 +14,19 @@ app_server <- function(input, output, session) {
   kin_dat <- reactive({
     
     HRaDeX::prepare_kin_dat(dat(), 
-                            state = dat()[["State"]][1],
+                            state = s_fit_state %()% state,
                             time_0 = 0.001,
                             time_100 = max(dat()[["Exposure"]]))
     
   })
   
   peptide_list <- reactive({ HRaDeX::get_peptide_list(kin_dat()) })
+  
+  s_fit_state <- mod_settings_state_server(
+    id = "fit_state",
+    mode = "SINGLE",
+    p_states_chosen_protein = reactive(unique(dat()[["State"]]))
+  )
   
   # control <- list(maxiter = 1000,  scale = "levenberg")
   # start_3 = c(n_1 = 0.33, k_1 = 2, n_2 = 0.33, k_2 = 0.1, n_3 = 0.33, k_3 = 0.01)
@@ -75,7 +81,6 @@ app_server <- function(input, output, session) {
   
   params_list <- reactive({
     
-    browser()
     HRaDeX::get_params_list(kin_dat(), peptide_list(), 
                             fit_control(), 
                             start_1(), lower_1(), upper_1(), 
