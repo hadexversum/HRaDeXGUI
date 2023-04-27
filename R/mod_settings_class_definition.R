@@ -59,6 +59,7 @@ mod_settings_class_definition_ui <- function(id){
         
       )
     ),
+    p("Besides that, there are two extreme cases defined by the rule of thumb: immediate exchange (fire red), and no exchange (black). For more information see the documentation and help.  "),
     fancy_icon = "cogs"
   )
 }

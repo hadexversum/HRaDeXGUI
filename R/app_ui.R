@@ -44,16 +44,21 @@ app_ui <- function(request) {
                 fluidRow(
                   column(
                     width = 3,
-                    plotOutput_h("get_params_summary_image_plot"),
-                    plotOutput_h("plot_start_params_plot")),
+                    plotOutput_h("plot_3_exp_map_v2_plot")
+                  ),
                   column(
                     width = 3,
-                    plotOutput_h("plot_3_exp_map_v2_plot"),
                     plotOutput_h("plot_n_plot")
                   ),
                   column(
                     width = 3,
                     plotOutput_h("plot_r2_hist_plot")
+                  )
+                ),
+                fluidRow(
+                  column(
+                    width = 9, 
+                    verbatimTextOutput("fit_info")
                   )
                 )
               )
