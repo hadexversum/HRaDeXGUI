@@ -14,6 +14,8 @@ app_server <- function(input, output, session) {
   
   fit_control <- mod_settings_fit_server("settings_fit_control")
   
+  workflow_type <- mod_settings_workflow_server("workflow")
+  
   s_fit_state <- mod_settings_state_server(
     id = "fit_state",
     mode = "SINGLE",
@@ -27,74 +29,47 @@ app_server <- function(input, output, session) {
                             time_0 = 0.001,
                             time_100 = max(dat()[["Exposure"]]))
     
+    
+    
   })
   
-  peptide_list <- reactive({ HRaDeX::get_peptide_list(kin_dat()) })
+  fit_k_params <- reactive({
+    
+    data.frame(start = unlist(fit_params()[2]), 
+               lower = unlist(fit_params()[3]),
+               upper = unlist(fit_params()[1]),
+               row.names = c("k_1", "k_2", "k_3"))
+    
+  })
   
 
-  start_3 <- reactive({
-    
-    c(n_1 = 0.33, k_1 = fit_params()[["start_3"]][1], 
-      n_2 = 0.33, k_2 = fit_params()[["start_3"]][2],
-      n_3 = 0.33, k_3 = fit_params()[["start_3"]][3])
-  })
-  
-  lower_3 <- reactive({
-    
-    c(n_1 = 0, k_1 = fit_params()[["lower_3"]][1], 
-      n_2 = 0, k_2 = fit_params()[["lower_3"]][2],
-      n_3 = 0, k_3 = fit_params()[["lower_3"]][3])
-    
-  })
-  
-  upper_3 <- reactive({
-    
-    c(n_1 = 1, k_1 = fit_params()[["upper_3"]][1], 
-      n_2 = 1, k_2 = fit_params()[["upper_3"]][2],
-      n_3 = 1, k_3 = fit_params()[["upper_3"]][3])
-    
-  })
-  
-  upper_1 <- reactive({
-    
-    c(n = 1,
-      k = max(fit_params()[["upper_3"]]))
-  })
-  
-  lower_1 <- reactive({
-    
-    c(n = 0,
-      k = min(fit_params()[["lower_3"]]))
-    
-  })
-  
-  start_1 <- reactive({
-    
-    c(n = 1, 
-      k = fit_params()[["start_3"]][2])
-    
-  }) 
-  
   params_list <- reactive({
     
-    HRaDeX::get_params_list(kin_dat(), peptide_list(), 
-                            fit_control(), 
-                            start_1(), lower_1(), upper_1(), 
-                            start_3(), lower_3(), upper_3(),
-                            trace = F)
+    HRaDeX::create_fit_dataset(kin_dat(), 
+                               control = fit_control(), 
+                               fit_k_params = fit_k_params(), 
+                               trace = F, 
+                               workflow = workflow_type())
   })
   
-  fixed_params <- reactive({ HRaDeX::fix_params_list(params_list(), lower_3(), upper_3()) })
+  output[["plot_cov_class_plot"]] <- renderPlot({ HRaDeX::plot_cov_class(params_list()) })
   
-  output[["plot_cov_class_plot"]] <- renderPlot({ HRaDeX::plot_cov_class(fixed_params()) })
+  output[["plot_3_exp_map_v2_plot"]] <- renderPlot({ HRaDeX::plot_3_exp_map_v2(params_list()) })
   
-  output[["plot_3_exp_map_v2_plot"]] <- renderPlot({ HRaDeX::plot_3_exp_map_v2(fixed_params()) })
+  output[["plot_n_plot"]] <- renderPlot({ HRaDeX::plot_n(params_list()) })
   
-  output[["plot_n_plot"]] <- renderPlot({ HRaDeX::plot_n(fixed_params()) })
+  output[["plot_r2_hist_plot"]] <- renderPlot({ HRaDeX::plot_r2_hist(params_list()) })
   
-  output[["plot_r2_hist_plot"]] <- renderPlot({ HRaDeX::plot_r2_hist(fixed_params()) })
+  output[["params_list_data"]] <- DT::renderDataTable({ 
+    
+      dplyr::mutate(params_list(), 
+             n_1 = round(n_1, 2),
+             k_1 = round(k_1, 2),
+             n_2 = round(n_2, 2),
+             k_2 = round(k_2, 2),
+             n_3 = round(n_3, 2),
+             k_3 = round(k_3, 2))
+      })
   
-  output[["params_list_data"]] <- DT::renderDataTable({ params_list() })
-  
-  output[["fit_info"]] <- renderText({ HRaDeX::get_fit_values_info(fixed_params() )})
+  output[["fit_info"]] <- renderText({ HRaDeX::get_fit_values_info(params_list() )})
 }
