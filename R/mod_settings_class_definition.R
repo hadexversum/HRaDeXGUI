@@ -60,6 +60,17 @@ mod_settings_class_definition_ui <- function(id){
       )
     ),
     p("Besides that, there are two extreme cases defined by the rule of thumb: immediate exchange (fire red), and no exchange (black). For more information see the documentation and help.  "),
+    
+    div(
+      style = "display:inline-block; float:right;",
+      offset = 2, 
+      actionButton(inputId = "class_apply",
+                   label = "Confirm definition changes",
+                   inline = TRUE,
+                   icon = icon("wand-magic-sparkles"))
+    ),
+    br(),
+    br(),
     fancy_icon = "cogs"
   )
 }
@@ -71,15 +82,16 @@ mod_settings_class_definition_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
  
-    fit_params <- reactive({
+    fit_k_params <- reactive({
       
-      list(upper_3 = c(input[["k_fast_upper"]], input[["k_medium_upper"]], input[["k_slow_upper"]]),
-           start_3 = c(input[["k_fast_start"]], input[["k_medium_start"]], input[["k_slow_start"]]),
-           lower_3 = c(input[["k_fast_lower"]], input[["k_medium_lower"]], input[["k_slow_lower"]]))
-    
+      data.frame(start = c(input[["k_fast_start"]], input[["k_medium_start"]], input[["k_slow_start"]]),
+                 lower = c(input[["k_fast_lower"]], input[["k_medium_lower"]], input[["k_slow_lower"]]),
+                 upper = c(input[["k_fast_upper"]], input[["k_medium_upper"]], input[["k_slow_upper"]]),
+                 row.names = c("k_1", "k_2", "k_3")) 
       })
     
-   return(fit_params)
+    return(fit_k_params)
+
    
   })
 }

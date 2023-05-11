@@ -66,6 +66,10 @@ app_ui <- function(request) {
             tabPanel(
               "Params",
               DT::dataTableOutput("params_list_data")
+            ),
+            tabPanel(
+              "Plots",
+              mod_fit_plots_ui("fit_plots")
             )
           )
         )
