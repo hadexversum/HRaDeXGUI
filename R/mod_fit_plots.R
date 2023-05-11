@@ -21,11 +21,7 @@ mod_fit_plots_server <- function(id, kin_dat, list_params){
  
     output[["plot_fit_plots"]] <- renderUI({
       
-      # browser()
-      
       lapply(1:nrow(list_params),  function(i){
-        
-        print(i)
         
         fit_dat <- dplyr::filter(kin_dat, 
                                  Sequence == list_params[i, "sequence"],
