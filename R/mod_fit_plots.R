@@ -9,7 +9,8 @@
 #' @importFrom shiny NS tagList 
 mod_fit_plots_ui <- function(id){
   ns <- NS(id)
-  uiOutput(ns("plot_fit_plots"))
+  
+  hadex_with_spinner(uiOutput(ns("plot_fit_plots")))
 }
     
 #' fit_plots Server Functions

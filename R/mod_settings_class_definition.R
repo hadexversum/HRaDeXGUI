@@ -61,16 +61,16 @@ mod_settings_class_definition_ui <- function(id){
     ),
     p("Besides that, there are two extreme cases defined by the rule of thumb: immediate exchange (fire red), and no exchange (black). For more information see the documentation and help.  "),
     
-    div(
-      style = "display:inline-block; float:right;",
-      offset = 2, 
-      actionButton(inputId = "class_apply",
-                   label = "Confirm definition changes",
-                   inline = TRUE,
-                   icon = icon("wand-magic-sparkles"))
-    ),
-    br(),
-    br(),
+    # div(
+    #   style = "display:inline-block; float:right;",
+    #   offset = 2, 
+    #   actionButton(inputId = "class_apply",
+    #                label = "Confirm definition changes",
+    #                inline = TRUE,
+    #                icon = icon("wand-magic-sparkles"))
+    # ),
+    # br(),
+    # br(),
     fancy_icon = "cogs"
   )
 }

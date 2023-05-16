@@ -13,6 +13,7 @@ app_ui <- function(request) {
       br(),
       sidebarLayout(
         sidebarPanel(
+          class = "HaDeX-tab-content-element",
           br(),
           img(src='./www/logo.png', width = "40%", align = "center"),
           br(),
@@ -69,6 +70,7 @@ app_ui <- function(request) {
             ),
             tabPanel(
               "Plots",
+              class = "HaDeX-tab-content-element",
               mod_fit_plots_ui("fit_plots")
             )
           )
