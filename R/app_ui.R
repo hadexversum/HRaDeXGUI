@@ -43,7 +43,7 @@ app_ui <- function(request) {
                   ),
                   column(
                     width = 3, 
-                    align = "center",
+                   
                     br(),
                     br(),
                     img(src='./www/rgb_class.png', width = "100%",  align = "center")
@@ -78,7 +78,7 @@ app_ui <- function(request) {
             tabPanel(
               "Plots",
               class = "HaDeX-tab-content-element",
-              mod_fit_plots_ui("fit_plots")
+              hadex_with_spinner(uiOutput("plot_fit_plots"))
             )
           )
         )

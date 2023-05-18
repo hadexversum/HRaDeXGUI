@@ -61,7 +61,26 @@ app_server <- function(input, output, session) {
   
   output[["fit_info"]] <- renderText({ HRaDeX::get_fit_values_info(list_params() )})
   
-  mod_fit_plots_server("fit_plots",
-                       kin_dat = kin_dat(), 
-                       list_params = list_params())
+  # mod_fit_plots_server("fit_plots",
+  #                      kin_dat = kin_dat(), 
+  #                      list_params = list_params())
+  
+  output[["plot_fit_plots"]] <- renderUI({
+    
+    lapply(1:nrow(list_params()),  function(i){
+      
+      fit_dat <- dplyr::filter(kin_dat(), 
+                               Sequence == list_params()[i, "sequence"],
+                               Start == list_params()[i, "start"]) 
+      
+      fit_values <- list_params()[i, ]
+      
+      renderPlot(HRaDeX::plot_uc_fit(fit_dat,
+                                     fit_values,
+                                     triplex = T))
+      
+    })
+    
+  })
+  
 }
