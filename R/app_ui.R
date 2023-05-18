@@ -40,6 +40,13 @@ app_ui <- function(request) {
                   column(
                     width = 9,
                     plotOutput_h("plot_cov_class_plot")
+                  ),
+                  column(
+                    width = 3, 
+                    align = "center",
+                    br(),
+                    br(),
+                    img(src='./www/rgb_class.png', width = "100%",  align = "center")
                   )
                 ),
                 fluidRow(
