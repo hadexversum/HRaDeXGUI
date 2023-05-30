@@ -50,13 +50,15 @@ app_server <- function(input, output, session) {
   
   output[["params_list_data"]] <- DT::renderDataTable({ 
     
-      dplyr::mutate(list_params(), 
+    tmp_dat <- dplyr::select(list_params(), -id)
+    
+      dplyr::mutate(tmp_dat, 
              n_1 = round(n_1, 2),
              k_1 = round(k_1, 2),
              n_2 = round(n_2, 2),
              k_2 = round(k_2, 2),
              n_3 = round(n_3, 2),
-             k_3 = round(k_3, 2))
+             k_3 = round(k_3, 2)) 
       })
   
   output[["fit_info"]] <- renderText({ HRaDeX::get_fit_values_info(list_params() )})
