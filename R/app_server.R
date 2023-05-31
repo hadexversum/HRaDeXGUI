@@ -79,7 +79,8 @@ app_server <- function(input, output, session) {
       
       renderPlot(HRaDeX::plot_uc_fit(fit_dat,
                                      fit_values,
-                                     triplex = T))
+                                     duplex = T,
+                                     triplex = F))
       
     })
     

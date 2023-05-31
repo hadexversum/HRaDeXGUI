@@ -15,7 +15,7 @@ mod_settings_workflow_ui <- function(id){
       inputId = ns("type"),
       label = "Select desired workflow",
       choices = c("3exp/1exp" = 31, "2exp/1exp" = 21, "3exp/2exp/1exp" = 321),
-      selected = "3exp/1exp",
+      selected = "3exp/2exp/1exp",
       multiple = FALSE
     ),
     fancy_icon = "cogs"
