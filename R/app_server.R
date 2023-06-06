@@ -53,13 +53,20 @@ app_server <- function(input, output, session) {
     tmp_dat <- dplyr::select(list_params(), -id)
     
       dplyr::mutate(tmp_dat, 
-             n_1 = round(n_1, 2),
-             k_1 = round(k_1, 2),
-             n_2 = round(n_2, 2),
-             k_2 = round(k_2, 2),
-             n_3 = round(n_3, 2),
-             k_3 = round(k_3, 2)) 
-      })
+             n_1 = round(n_1, 3),
+             k_1 = round(k_1, 3),
+             n_2 = round(n_2, 3),
+             k_2 = round(k_2, 3),
+             n_3 = round(n_3, 3),
+             k_3 = round(k_3, 3)) 
+  })
+  
+  output[["download_fit_params_table"]] <- downloadHandler(
+    filename = "fit_params_data.csv",
+    content = function(file){
+      write.csv(dplyr::select(list_params(), -id), file)
+    }
+  )
   
   output[["fit_info"]] <- renderText({ HRaDeX::get_fit_values_info(list_params() )})
   

@@ -73,7 +73,8 @@ app_ui <- function(request) {
               ),
             tabPanel(
               "Params",
-              DT::dataTableOutput("params_list_data")
+              DT::dataTableOutput("params_list_data"),
+              downloadButton("download_fit_params_table", "Save table (.csv)")
             ),
             tabPanel(
               "Plots",
