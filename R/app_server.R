@@ -26,7 +26,7 @@ app_server <- function(input, output, session) {
   
   kin_dat <- reactive({
     
-    validate(need(input[["do_run"]] > 0, "Run the analysis by pressing the button on the left."))
+    # validate(need(input[["do_run"]] > 0, "Run the analysis by pressing the button on the left."))
     
     print("Creating kinetic data")
     print(paste0("Protein: ", dat()[["Protein"]][[1]]))
