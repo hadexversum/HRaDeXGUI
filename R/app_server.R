@@ -28,9 +28,9 @@ app_server <- function(input, output, session) {
     
     # validate(need(input[["do_run"]] > 0, "Run the analysis by pressing the button on the left."))
     
-    print("Creating kinetic data")
-    print(paste0("Protein: ", dat()[["Protein"]][[1]]))
-    print(paste0("State: ", s_fit_state %()% state))
+    message("Creating kinetic data")
+    message(paste0("Protein: ", dat()[["Protein"]][[1]]))
+    message(paste0("State: ", s_fit_state %()% state))
     
     HRaDeX::prepare_kin_dat(dat(), 
                             state = s_fit_state %()% state,
@@ -43,10 +43,10 @@ app_server <- function(input, output, session) {
   
   list_params <- reactive({
     
-    print("Creating fit dataset")
-    print(paste0("Workflow type ", workflow_type()))
-    print("Fit params:")
-    print(fit_k_params())
+    message("Creating fit dataset")
+    message(paste0("Workflow type ", workflow_type()))
+    message("Fit params:")
+    message(fit_k_params())
     
     HRaDeX::create_fit_dataset(kin_dat(), 
                                control = fit_control(), 
