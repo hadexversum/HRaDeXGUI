@@ -5,35 +5,151 @@
 #' @import shiny
 #' @noRd
 app_server <- function(input, output, session) {
-  # Your application server logic
+  
+  p_states_chosen_protein <- reactive(unique(dat()[["State"]]))
+  
+  observe({
+    updateSelectInput(
+      session,
+      inputId = "fit_state",
+      choices = p_states_chosen_protein(),
+      selected = p_states_chosen_protein()[1]
+    )
+  })
+  
+  
+  ######################
+  ####### PARAMS #######
+  ######################
+  
   dat <- mod_input_data_server("input_data")
   
-  fit_k_params <- mod_settings_class_definition_server("class_definition")
+  fit_k_params <- eventReactive(input[["do_run"]], {
+    
+    validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
+    
+    data.frame(start = c(input[["k_fast_start"]], input[["k_medium_start"]], input[["k_slow_start"]]),
+               lower = c(input[["k_fast_lower"]], input[["k_medium_lower"]], input[["k_slow_lower"]]),
+               upper = c(input[["k_fast_upper"]], input[["k_medium_upper"]], input[["k_slow_upper"]]),
+               row.names = c("k_1", "k_2", "k_3")) 
+  })
   
-  fit_control <- mod_settings_fit_server("settings_fit_control")
+  ##
   
-  workflow_type <- mod_settings_workflow_server("workflow")
+  fit_control <- eventReactive(input[["do_run"]], {
+    
+    validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
+    
+    list(maxiter = input[["fit_maxiter"]],  scale = input[["fit_scale"]])
   
-  s_fit_state <- mod_settings_state_server(
-    id = "fit_state",
-    mode = "SINGLE",
-    p_states_chosen_protein = reactive(unique(dat()[["State"]]))
-  )
+  }) 
   
-  # output[["run_status"]] <- renderText(
-  #   paste("Please press the button to confirm selected parameters.")
-  # )
+  ##
+  
+  workflow_type <- eventReactive(input[["do_run"]],{ 
+    
+    validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
+    
+    input[["type"]] 
+    
+  })
+  
+  ##
+  
+  fit_state <- eventReactive(input[["do_run"]], {
+    
+    validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
+    
+    input[["fit_state"]]
+  })
+  
+  ##
+  
+  # state_ok <- reactiveVal(0)
+  # 
+  # state_after_button <- eventReactive(input[["do_run"]], {
+  #   s_fit_state %()% state })
+  # 
+  # s_fit_state <- mod_settings_state_server(
+  #   id = "fit_state",
+  #   mode = "SINGLE",
+  #   p_states_chosen_protein = reactive(unique(dat()[["State"]])))
+  # 
+  
+  ######################
+  
+  params_ready <- reactiveVal(0)
+  
+  ######################
+  ####### EFFECT #######
+  ######################
+  
+  params_fixed <- reactive({
+    data.frame(start = c(input[["k_fast_start"]], input[["k_medium_start"]], input[["k_slow_start"]]),
+                             lower = c(input[["k_fast_lower"]], input[["k_medium_lower"]], input[["k_slow_lower"]]),
+                             upper = c(input[["k_fast_upper"]], input[["k_medium_upper"]], input[["k_slow_upper"]]),
+                             row.names = c("k_1", "k_2", "k_3")) 
+  })
+  
+  observe({
+   if(!all(params_fixed() == fit_k_params())) params_ready(-1)
+  })
+  
+  observe({
+    if(input[["fit_maxiter"]] != fit_control()[["maxiter"]] | input[["fit_scale"]] != fit_control()[["scale"]]) params_ready(-1)
+  })
+    
+  observe({
+    if(input[["type"]] != workflow_type()) params_ready(-1)
+  })
+  
+  # observe({
+  #   if(state_after_button() != s_fit_state %()% state) {
+  #     params_ready(-1)
+  #     state_ok(0)
+  #   }
+  # })
+  
+  observe({
+    if(fit_state() != input[["fit_state"]]) params_ready(-1)
+  })
+  
+  # observe({
+  #   if(state_after_button() == s_fit_state %()% state) state_ok(1)
+  # })
+  
+  output[["run_status"]] <- renderText({
+    
+    mes <- ""
+    
+    if(input[["do_run"]] == 0) mes <- "Press the button to initiate the process."
+    
+    if(params_ready() == 1) mes <- ""
+    
+    if(params_ready() == -1) mes <- "The parameters changed. Please press the button to rerun analysis."
+    
+    mes
+    
+  })
+  
+  observe({
+    if(all(params_fixed() == fit_k_params()) & input[["fit_maxiter"]] == fit_control()[["maxiter"]] & input[["fit_scale"]] == fit_control()[["scale"]] & input[["type"]] == workflow_type() & fit_state() == input[["fit_state"]]) params_ready(1)
+  })
+  
+  ## checks
+  
   
   kin_dat <- reactive({
-    
-    # validate(need(input[["do_run"]] > 0, "Run the analysis by pressing the button on the left."))
+  
+    validate(need(input[["do_run"]] > 0, "Run the analysis by pressing the button on the left."))
+    # validate(need(state_ok() == 1, "Please confirm state changes."))
     
     message("Creating kinetic data")
     message(paste0("Protein: ", dat()[["Protein"]][[1]]))
-    message(paste0("State: ", s_fit_state %()% state))
+    message(paste0("State: ", fit_state())) #s_fit_state %()% state))
     
     HRaDeX::prepare_kin_dat(dat(), 
-                            state = s_fit_state %()% state,
+                            state = fit_state(), #s_fit_state %()% state,
                             time_0 = min(dat()[["Exposure"]]),
                             time_100 = max(dat()[["Exposure"]]))
     
@@ -55,7 +171,8 @@ app_server <- function(input, output, session) {
                                workflow = workflow_type())
   })
   
-  output[["plot_cov_class_plot"]] <- renderPlot({ HRaDeX::plot_cov_class(list_params()) })
+  output[["plot_cov_class_plot"]] <- renderPlot({ #browser() 
+    HRaDeX::plot_cov_class(list_params()) })
   
   output[["plot_3_exp_map_v2_plot"]] <- renderPlot({ HRaDeX::plot_3_exp_map_v2(list_params()) })
   
