@@ -185,6 +185,8 @@ app_server <- function(input, output, session) {
   
   output[["params_list_data"]] <- DT::renderDataTable({ 
     
+    # browser()
+    
     tmp_dat <- dplyr::select(list_params(), -id)
     
       dplyr::mutate(tmp_dat, 
@@ -193,7 +195,8 @@ app_server <- function(input, output, session) {
              n_2 = round(n_2, 3),
              k_2 = round(k_2, 3),
              n_3 = round(n_3, 3),
-             k_3 = round(k_3, 3)) 
+             k_3 = round(k_3, 3),
+             r2 = round(r2, 3))
   })
   
   ##
