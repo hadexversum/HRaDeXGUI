@@ -171,14 +171,17 @@ app_server <- function(input, output, session) {
                                workflow = workflow_type())
   })
   
-  output[["plot_cov_class_plot"]] <- renderPlot({ #browser() 
-    HRaDeX::plot_cov_class(list_params()) })
+  plot_cov_class_plot_out <- reactive({ HRaDeX::plot_cov_class(list_params()) })
+  output[["plot_cov_class_plot"]] <- renderPlot({ plot_cov_class_plot_out() })
   
-  output[["plot_3_exp_map_v2_plot"]] <- renderPlot({ HRaDeX::plot_3_exp_map_v2(list_params()) })
+  plot_3_exp_map_v2_plot_out <- reactive({ HRaDeX::plot_3_exp_map_v2(list_params()) })
+  output[["plot_3_exp_map_v2_plot"]] <- renderPlot({ plot_3_exp_map_v2_plot_out() })
   
-  output[["plot_n_plot"]] <- renderPlot({ HRaDeX::plot_n(list_params()) })
+  plot_n_plot_out <- reactive({ HRaDeX::plot_n(list_params()) })
+  output[["plot_n_plot"]] <- renderPlot({ plot_n_plot_out() })
   
-  output[["plot_r2_hist_plot"]] <- renderPlot({ HRaDeX::plot_r2_hist(list_params()) })
+  plot_r2_hist_plot_out <- reactive({ HRaDeX::plot_r2_hist(list_params()) })
+  output[["plot_r2_hist_plot"]] <- renderPlot({ plot_r2_hist_plot_out() })
   
   output[["params_list_data"]] <- DT::renderDataTable({ 
     
@@ -193,6 +196,8 @@ app_server <- function(input, output, session) {
              k_3 = round(k_3, 3)) 
   })
   
+  ##
+  
   output[["download_fit_params_table"]] <- downloadHandler(
     filename = "fit_params_data.csv",
     content = function(file){
@@ -200,11 +205,13 @@ app_server <- function(input, output, session) {
     }
   )
   
-  output[["fit_info"]] <- renderText({ HRaDeX::get_fit_values_info(list_params() )})
+  ##
   
-  # mod_fit_plots_server("fit_plots",
-  #                      kin_dat = kin_dat(), 
-  #                      list_params = list_params())
+  fit_info_txt <- reactive({ HRaDeX::get_fit_values_info(list_params()) })
+  
+  output[["fit_info"]] <- renderText({ fit_info_txt() })
+  
+  ##
   
   output[["plot_fit_plots"]] <- renderUI({
     
@@ -220,9 +227,17 @@ app_server <- function(input, output, session) {
                                      fit_values,
                                      duplex = T,
                                      triplex = F))
-      
     })
-    
   })
   
+  ##
+  
+  output[["fit_report"]] <- downloadHandler(
+    
+    filename <- "HRaDeX_Report.html",
+    content <- function(file) {
+      rmarkdown::render(input = app_sys("app/report_template.Rmd"),
+                        output_file = file, quiet = TRUE)
+    }
+  )
 }

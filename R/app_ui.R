@@ -165,6 +165,11 @@ app_ui <- function(request) {
                     width = 9, 
                     verbatimTextOutput("fit_info")
                   )
+                ),
+                downloadButton(
+                  outputId = "fit_report",
+                  label = "Create report",
+                  icon = icon("fas fa-download")
                 )
               )
               ),
