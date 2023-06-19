@@ -196,7 +196,7 @@ app_server <- function(input, output, session) {
              k_2 = round(k_2, 3),
              n_3 = round(n_3, 3),
              k_3 = round(k_3, 3),
-             r2 = round(r2, 5))
+             r2 = round(r2, 4))
   })
 
   ##
