@@ -239,7 +239,7 @@ app_server <- function(input, output, session) {
 
     filename <- "HRaDeX_Report.html",
     content <- function(file) {
-      rmarkdown::render(input = app_sys("app/report_template.Rmd"),
+      rmarkdown::render(input = app_sys("./app/report_template.Rmd"),
                         output_file = file, quiet = TRUE)
     }
   )
