@@ -136,36 +136,37 @@ app_ui <- function(request) {
                 fluidRow(
                   column(
                     width = 9,
-                    plotOutput_h("plot_cov_class_plot")
+                    plotOutput_h("plot_cov_class_plot"),
+                    fluidRow(
+                      column(
+                        width = 4,
+                        plotOutput_h("plot_3_exp_map_v2_plot")
+                      ),
+                      column(
+                        width = 4,
+                        plotOutput_h("plot_n_plot")
+                      ),
+                      column(
+                        width = 4,
+                        plotOutput_h("plot_r2_hist_plot")
+                      )
+                    ),
+                    fluidRow(
+                      column(
+                        width = 9, 
+                        verbatimTextOutput("fit_info")
+                      )
+                    )
                   ),
                   column(
                     width = 3, 
                    
                     br(),
                     br(),
-                    img(src='./www/rgb_class.png', width = "100%",  align = "center")
+                    img(src='./www/rgb_plaster.png', width = "100%",  align = "left")
                   )
                 ),
-                fluidRow(
-                  column(
-                    width = 3,
-                    plotOutput_h("plot_3_exp_map_v2_plot")
-                  ),
-                  column(
-                    width = 3,
-                    plotOutput_h("plot_n_plot")
-                  ),
-                  column(
-                    width = 3,
-                    plotOutput_h("plot_r2_hist_plot")
-                  )
-                ),
-                fluidRow(
-                  column(
-                    width = 9, 
-                    verbatimTextOutput("fit_info")
-                  )
-                ),
+                
                 downloadButton(
                   outputId = "fit_report",
                   label = "Create report",
