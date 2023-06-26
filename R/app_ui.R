@@ -163,7 +163,7 @@ app_ui <- function(request) {
                    
                     br(),
                     br(),
-                    img(src='./www/rgb_plaster.png', width = "100%",  align = "left")
+                    img(src='./www/rgb_plaster.png', width = "80%",  align = "left")
                   )
                 ),
                 
