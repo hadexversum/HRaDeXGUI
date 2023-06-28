@@ -17,7 +17,29 @@ app_server <- function(input, output, session) {
     )
   })
 
+  p_times <- reactive(unique(dat()[["Exposure"]]))
 
+  observe({
+    updateSelectInput(
+      session,
+      inputId = "time_0",
+      choices = p_times(),
+      selected = min(p_times())
+    )
+  })
+  
+  observe({
+    updateSelectInput(
+      session,
+      inputId = "time_100",
+      choices = p_times(),
+      selected = max(p_times())
+    )
+
+  })
+  
+  
+  
   ######################
   ####### PARAMS #######
   ######################
@@ -63,6 +85,20 @@ app_server <- function(input, output, session) {
     input[["fit_state"]]
   })
 
+  p_time_100 <- eventReactive(input[["do_run"]], {
+    
+    validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
+    as.numeric(input[["time_100"]])
+    
+  })
+  
+  p_time_0 <- eventReactive(input[["do_run"]], {
+    
+    validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
+    as.numeric(input[["time_0"]])
+    
+  })
+  
   ##
 
   # state_ok <- reactiveVal(0)
@@ -103,6 +139,14 @@ app_server <- function(input, output, session) {
     if(input[["type"]] != workflow_type()) params_ready(-1)
   })
 
+  observe({
+    if(p_time_0() != as.numeric(input[["time_0"]])) params_ready(-1)
+  })
+  
+  observe({
+    if(p_time_100() != as.numeric(input[["time_100"]])) params_ready(-1)
+  })
+  
   # observe({
   #   if(state_after_button() != s_fit_state %()% state) {
   #     params_ready(-1)
@@ -133,7 +177,7 @@ app_server <- function(input, output, session) {
   })
 
   observe({
-    if(all(params_fixed() == fit_k_params()) & input[["fit_maxiter"]] == fit_control()[["maxiter"]] & input[["fit_scale"]] == fit_control()[["scale"]] & input[["type"]] == workflow_type() & fit_state() == input[["fit_state"]]) params_ready(1)
+    if(all(params_fixed() == fit_k_params()) & input[["fit_maxiter"]] == fit_control()[["maxiter"]] & input[["fit_scale"]] == fit_control()[["scale"]] & input[["type"]] == workflow_type() & fit_state() == input[["fit_state"]] & p_time_0() == as.numeric(input[["time_0"]]) & p_time_100() == as.numeric(input[["time_100"]])) params_ready(1)
   })
 
   ## checks
@@ -143,6 +187,8 @@ app_server <- function(input, output, session) {
 
     validate(need(input[["do_run"]] > 0, "Run the analysis by pressing the button on the left."))
     # validate(need(state_ok() == 1, "Please confirm state changes."))
+    
+    # browser()
 
     message("Creating kinetic data")
     message(paste0("Protein: ", dat()[["Protein"]][[1]]))
@@ -150,8 +196,8 @@ app_server <- function(input, output, session) {
 
     HRaDeX::prepare_kin_dat(dat(),
                             state = fit_state(), #s_fit_state %()% state,
-                            time_0 = min(dat()[["Exposure"]]),
-                            time_100 = max(dat()[["Exposure"]]))
+                            time_0 = p_time_0(),
+                            time_100 = p_time_100())
 
 
 

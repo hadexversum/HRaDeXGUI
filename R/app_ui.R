@@ -47,6 +47,28 @@ app_ui <- function(request) {
             fancy_icon = "cogs"
           ),
           br(),
+          ## control settings
+          collapsible_card(
+            title = "Time controls",
+            splitLayout(
+              selectInput(
+                inputId = "time_0",
+                label = "Deut 0%",
+                choices = c(0, 0.001, 0.167, 1),
+                selected = 0.001,
+                multiple = FALSE
+              ),
+              selectInput(
+                inputId = "time_100",
+                label = "Deut 100%",
+                choices = c(120, 150, 1440),
+                selected = 1440,
+                multiple = FALSE
+              )
+            ),
+            fancy_icon = "cogs"
+          ),
+          br(),
           ## workflow settings
           collapsible_card(
             title = "Workflow",
@@ -60,6 +82,7 @@ app_ui <- function(request) {
             fancy_icon = "cogs"
           ),
           br(),
+          
           ## class settings
           collapsible_card(
             title = "Class definition",
