@@ -39,6 +39,11 @@ app_server <- function(input, output, session) {
   })
   
   
+  output[["k_params_plot"]] <- renderPlot({
+    
+    HRaDeX::plot_start_params(params_fixed())
+    
+  })
   
   ######################
   ####### PARAMS #######
