@@ -38,10 +38,37 @@ app_server <- function(input, output, session) {
 
   })
   
-  
-  output[["k_params_plot"]] <- renderPlot({
+  observe({
     
-    HRaDeX::plot_start_params(params_fixed())
+    input[["reset_class_def"]]
+    
+    updateNumericInput(inputId = "k_fast_upper",
+                       value = 30) 
+    updateNumericInput(inputId = "k_fast_lower",
+                       value = 1)
+    updateNumericInput(inputId = "k_fast_start",
+                       value = 1)
+    updateNumericInput(inputId = "k_medium_upper",
+                       value = 1)
+    updateNumericInput(inputId = "k_medium_lower",
+                       value = 0.1)
+    updateNumericInput(inputId = "k_medium_start",
+                       value = 0.1)
+    updateNumericInput(inputId = "k_slow_upper",
+                       value = 0.1)
+    updateNumericInput(inputId = "k_slow_lower",
+                       value = 0)
+    updateNumericInput(inputId = "k_slow_start",
+                       value = 0.01)
+  })
+  
+  ##
+  
+  output[["k_params_plot"]] <- renderUI({
+    
+    renderPlot({
+      HRaDeX::plot_start_params(params_fixed())
+    })
     
   })
   
