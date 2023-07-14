@@ -218,6 +218,7 @@ app_server <- function(input, output, session) {
   kin_dat <- reactive({
 
     validate(need(input[["do_run"]] > 0, "Run the analysis by pressing the button on the left."))
+    validate(need(fit_state() %in% unique(dat()[["State"]]), "New file detected, rerun the analysis by pressing the button."))
     # validate(need(state_ok() == 1, "Please confirm state changes."))
     
     # browser()
