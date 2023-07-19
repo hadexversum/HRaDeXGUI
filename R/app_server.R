@@ -57,7 +57,7 @@ app_server <- function(input, output, session) {
     updateNumericInput(inputId = "k_slow_upper",
                        value = 0.1)
     updateNumericInput(inputId = "k_slow_lower",
-                       value = 0)
+                       value = 0.0001)
     updateNumericInput(inputId = "k_slow_start",
                        value = 0.01)
   })
