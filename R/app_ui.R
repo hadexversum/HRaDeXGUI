@@ -217,6 +217,11 @@ app_ui <- function(request) {
               "Plots",
               class = "HaDeX-tab-content-element",
               hadex_with_spinner(uiOutput("plot_fit_plots"))
+            ),
+            tabPanel(
+              "Plots Data",
+              DT::dataTableOutput("uc_data"),
+              downloadButton("download_uc_table", "Save table (.csv)") 
             )
           )
         )

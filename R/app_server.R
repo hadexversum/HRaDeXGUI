@@ -322,4 +322,27 @@ app_server <- function(input, output, session) {
                         output_file = file, quiet = TRUE)
     }
   )
+  
+  #####################
+  ## TAB: PLOTS DATA ##
+  #####################
+  
+  output[["uc_data"]] <- DT::renderDataTable({
+    
+    tmp_dat <- dplyr::mutate(kin_dat(),
+                      frac_deut_uptake = round(frac_deut_uptake, 4),
+                      deut_uptake = round(deut_uptake, 4))
+    
+    dplyr::arrange(tmp_dat, Start, End, Exposure)
+    
+  })
+  
+    
+  output[["download_uc_table"]] <- downloadHandler(
+      filename = "uc_data.csv",
+      content = function(file){
+        write.csv(kin_dat(), file)
+      }
+  )
+  
 }
