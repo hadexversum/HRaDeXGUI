@@ -250,70 +250,49 @@ app_server <- function(input, output, session) {
                                workflow = workflow_type())
   })
 
-  plot_cov_class_plot_out <- reactive({ HRaDeX::plot_cov_class(list_params()) })
-  output[["plot_cov_class_plot"]] <- renderPlot({ plot_cov_class_plot_out() })
+  
+  hires_params <- reactive({
+    
+    HRaDeX::calculate_hires(list_params())
 
-  plot_3_exp_map_v2_plot_out <- reactive({ HRaDeX::plot_3_exp_map_v2(list_params()) })
-  output[["plot_3_exp_map_v2_plot"]] <- renderPlot({ plot_3_exp_map_v2_plot_out() })
-
-  plot_n_plot_out <- reactive({ HRaDeX::plot_n(list_params()) })
-  output[["plot_n_plot"]] <- renderPlot({ plot_n_plot_out() })
-
-  plot_r2_hist_plot_out <- reactive({ HRaDeX::plot_r2_hist(list_params()) })
-  output[["plot_r2_hist_plot"]] <- renderPlot({ plot_r2_hist_plot_out() })
-
-  output[["params_list_data"]] <- DT::renderDataTable({
-
-    # browser()
-
-    tmp_dat <- dplyr::select(list_params(), -id)
-
-      dplyr::mutate(tmp_dat,
-             n_1 = round(n_1, 3),
-             k_1 = round(k_1, 3),
-             n_2 = round(n_2, 3),
-             k_2 = round(k_2, 3),
-             n_3 = round(n_3, 3),
-             k_3 = round(k_3, 3),
-             r2 = round(r2, 4))
+  })
+  
+  hires_plot <- reactive({
+    
+    HRaDeX::plot_hires(hires_params())
+    
+  })
+  
+  ###################
+  ## TAB: OVERVIEW ##
+  ###################
+  
+  output[["hires_plot_out"]] <- renderPlot({
+    
+    hires_plot()
+    
   })
 
   ##
 
-  output[["download_fit_params_table"]] <- downloadHandler(
-    filename = "fit_params_data.csv",
-    content = function(file){
-      write.csv(dplyr::select(list_params(), -id), file)
-    }
-  )
-
-  ##
-
+  plot_cov_class_plot_out <- reactive({ HRaDeX::plot_cov_class(list_params()) })
+  output[["plot_cov_class_plot"]] <- renderPlot({ plot_cov_class_plot_out() })
+  
+  plot_3_exp_map_v2_plot_out <- reactive({ HRaDeX::plot_3_exp_map_v2(list_params()) })
+  output[["plot_3_exp_map_v2_plot"]] <- renderPlot({ plot_3_exp_map_v2_plot_out() })
+  
+  plot_n_plot_out <- reactive({ HRaDeX::plot_n(list_params()) })
+  output[["plot_n_plot"]] <- renderPlot({ plot_n_plot_out() })
+  
+  plot_r2_hist_plot_out <- reactive({ HRaDeX::plot_r2_hist(list_params()) })
+  output[["plot_r2_hist_plot"]] <- renderPlot({ plot_r2_hist_plot_out() })
+  
   fit_info_txt <- reactive({ HRaDeX::get_fit_values_info(list_params()) })
 
   output[["fit_info"]] <- renderText({ fit_info_txt() })
 
   ##
-
-  output[["plot_fit_plots"]] <- renderUI({
-
-    lapply(1:nrow(list_params()),  function(i){
-
-      fit_dat <- dplyr::filter(kin_dat(),
-                               Sequence == list_params()[i, "sequence"],
-                               Start == list_params()[i, "start"])
-
-      fit_values <- list_params()[i, ]
-
-      renderPlot(HRaDeX::plot_uc_fit(fit_dat,
-                                     fit_values,
-                                     duplex = T,
-                                     triplex = F))
-    })
-  })
-
-  ##
-
+  
   output[["fit_report"]] <- downloadHandler(
 
     filename <- "HRaDeX_Report.html",
@@ -322,6 +301,52 @@ app_server <- function(input, output, session) {
                         output_file = file, quiet = TRUE)
     }
   )
+  
+  #################
+  ## TAB: PARAMS ##
+  #################
+  
+  output[["params_list_data"]] <- DT::renderDataTable({
+    
+    tmp_dat <- dplyr::select(list_params(), -id)
+    
+    dplyr::mutate(tmp_dat,
+                  n_1 = round(n_1, 3),
+                  k_1 = round(k_1, 3),
+                  n_2 = round(n_2, 3),
+                  k_2 = round(k_2, 3),
+                  n_3 = round(n_3, 3),
+                  k_3 = round(k_3, 3),
+                  r2 = round(r2, 4))
+  })
+  
+  output[["download_fit_params_table"]] <- downloadHandler(
+    filename = "fit_params_data.csv",
+    content = function(file){
+      write.csv(dplyr::select(list_params(), -id), file)
+    }
+  )
+  
+  ################
+  ## TAB: PLOTS ##
+  ################
+  
+  output[["plot_fit_plots"]] <- renderUI({
+    
+    lapply(1:nrow(list_params()),  function(i){
+      
+      fit_dat <- dplyr::filter(kin_dat(),
+                               Sequence == list_params()[i, "sequence"],
+                               Start == list_params()[i, "start"])
+      
+      fit_values <- list_params()[i, ]
+      
+      renderPlot(HRaDeX::plot_uc_fit(fit_dat,
+                                     fit_values,
+                                     duplex = T,
+                                     triplex = F))
+    })
+  })
   
   #####################
   ## TAB: PLOTS DATA ##
@@ -338,6 +363,24 @@ app_server <- function(input, output, session) {
   })
   
     
+  output[["params_list_data"]] <- DT::renderDataTable({
+    
+    # browser()
+    
+    tmp_dat <- dplyr::select(list_params(), -id)
+    
+    dplyr::mutate(tmp_dat,
+                  n_1 = round(n_1, 3),
+                  k_1 = round(k_1, 3),
+                  n_2 = round(n_2, 3),
+                  k_2 = round(k_2, 3),
+                  n_3 = round(n_3, 3),
+                  k_3 = round(k_3, 3),
+                  r2 = round(r2, 4))
+  })
+  
+  ##
+  
   output[["download_uc_table"]] <- downloadHandler(
       filename = "uc_data.csv",
       content = function(file){

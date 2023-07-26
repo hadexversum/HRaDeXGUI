@@ -181,6 +181,7 @@ app_ui <- function(request) {
                 fluidRow(
                   column(
                     width = 9,
+                    plotOutput_h("hires_plot_out"),
                     plotOutput_h("plot_cov_class_plot"),
                     fluidRow(
                       column(
