@@ -49,21 +49,32 @@ app_ui <- function(request) {
           br(),
           ## control settings
           collapsible_card(
-            title = "Time controls",
-            splitLayout(
-              selectInput(
-                inputId = "time_0",
-                label = "Deut 0%",
-                choices = c(0, 0.001, 0.167, 1),
-                selected = 0.001,
-                multiple = FALSE
+            title = "Deuterium uptake controls",
+            fluidRow(
+              column(
+                width = 6, 
+                selectInput(
+                  inputId = "time_0",
+                  label = "Deut 0%",
+                  choices = c(0, 0.001, 0.167, 1),
+                  selected = 0.001,
+                  multiple = FALSE
+                )
               ),
-              selectInput(
-                inputId = "time_100",
-                label = "Deut 100%",
-                choices = c(120, 150, 1440),
-                selected = 1440,
-                multiple = FALSE
+              column(
+                width = 6,
+                selectInput(
+                  inputId = "time_100",
+                  label = "Deut 100%",
+                  choices = c(120, 150, 1440),
+                  selected = 1440,
+                  multiple = FALSE
+                )
+                # ,
+                # checkboxInput_h(
+                #   inputId = "is_FD",
+                #   label = "Is it FD control or measurement time point?"
+                # )
               )
             ),
             fancy_icon = "cogs"
