@@ -59,22 +59,30 @@ app_ui <- function(request) {
                   choices = c(0, 0.001, 0.167, 1),
                   selected = 0.001,
                   multiple = FALSE
+                ),
+                checkboxInput_h(
+                  inputId = "fractional",
+                  label = "Perform analysis on fractional values",
+                  value = TRUE
                 )
               ),
               column(
                 width = 6,
-                selectInput(
-                  inputId = "time_100",
-                  label = "Deut 100%",
-                  choices = c(120, 150, 1440),
-                  selected = 1440,
-                  multiple = FALSE
+                div(
+                  id = "fractional_part",
+                  selectInput(
+                    inputId = "time_100",
+                    label = "Deut 100%",
+                    choices = c(120, 150, 1440),
+                    selected = 1440,
+                    multiple = FALSE
+                  ),
+                  checkboxInput_h(
+                    inputId = "is_FD",
+                    label = "Use as FD control or time point?"
+                  )
                 )
-                # ,
-                # checkboxInput_h(
-                #   inputId = "is_FD",
-                #   label = "Is it FD control or measurement time point?"
-                # )
+                
               )
             ),
             fancy_icon = "cogs"

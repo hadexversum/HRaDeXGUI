@@ -89,6 +89,16 @@ app_server <- function(input, output, session) {
   })
 
   ##
+  
+  use_fractional <- eventReactive(input[["do_run"]],{
+    
+    validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
+    
+    input[["fractional"]]
+    
+  })
+  
+  ##
 
   fit_control <- eventReactive(input[["do_run"]], {
 
@@ -130,6 +140,14 @@ app_server <- function(input, output, session) {
     as.numeric(input[["time_0"]])
     
   })
+  
+  fd_check <- eventReactive(input[["do_run"]], {
+    
+    validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
+    input[["is_FD"]]
+    
+  })
+  
   
   ##
 
@@ -179,6 +197,9 @@ app_server <- function(input, output, session) {
     if(p_time_100() != as.numeric(input[["time_100"]])) params_ready(-1)
   })
   
+  observe(
+    if(input[["is_FD"]] != fd_check()) params_ready(-1)
+  )
   # observe({
   #   if(state_after_button() != s_fit_state %()% state) {
   #     params_ready(-1)
@@ -194,6 +215,12 @@ app_server <- function(input, output, session) {
   #   if(state_after_button() == s_fit_state %()% state) state_ok(1)
   # })
 
+  observe({
+    if(use_fractional() != input[["fractional"]]) params_ready(-1)
+  })
+  
+  ##
+  
   output[["run_status"]] <- renderText({
 
     mes <- ""
@@ -209,7 +236,7 @@ app_server <- function(input, output, session) {
   })
 
   observe({
-    if(all(params_fixed() == fit_k_params()) & input[["fit_maxiter"]] == fit_control()[["maxiter"]] & input[["fit_scale"]] == fit_control()[["scale"]] & input[["type"]] == workflow_type() & fit_state() == input[["fit_state"]] & p_time_0() == as.numeric(input[["time_0"]]) & p_time_100() == as.numeric(input[["time_100"]])) params_ready(1)
+    if(all(params_fixed() == fit_k_params()) & input[["fit_maxiter"]] == fit_control()[["maxiter"]] & input[["fit_scale"]] == fit_control()[["scale"]] & input[["type"]] == workflow_type() & fit_state() == input[["fit_state"]] & p_time_0() == as.numeric(input[["time_0"]]) & p_time_100() == as.numeric(input[["time_100"]]) & input[["is_FD"]] == fd_check() & use_fractional() == input[["fractional"]]) params_ready(1)
   })
 
   ## checks
@@ -230,7 +257,8 @@ app_server <- function(input, output, session) {
     HRaDeX::prepare_kin_dat(dat(),
                             state = fit_state(), #s_fit_state %()% state,
                             time_0 = p_time_0(),
-                            time_100 = p_time_100())
+                            time_100 = p_time_100(),
+                            FD = fd_check())
 
 
 
@@ -247,13 +275,15 @@ app_server <- function(input, output, session) {
                                control = fit_control(),
                                fit_k_params = fit_k_params(),
                                trace = F,
+                               fractional = use_fractional(),
                                workflow = workflow_type())
   })
 
   
   hires_params <- reactive({
     
-    HRaDeX::calculate_hires(list_params())
+    HRaDeX::calculate_hires(list_params(),
+                            fractional = use_fractional())
 
   })
   
@@ -275,14 +305,14 @@ app_server <- function(input, output, session) {
 
   ##
 
-  plot_cov_class_plot_out <- reactive({ HRaDeX::plot_cov_class(list_params()) })
+  plot_cov_class_plot_out <- reactive({ HRaDeX::plot_cov_class(list_params(), fractional = use_fractional()) })
   output[["plot_cov_class_plot"]] <- renderPlot({ plot_cov_class_plot_out() })
   
   plot_3_exp_map_v2_plot_out <- reactive({ HRaDeX::plot_3_exp_map_v2(list_params()) })
   output[["plot_3_exp_map_v2_plot"]] <- renderPlot({ plot_3_exp_map_v2_plot_out() })
   
-  plot_n_plot_out <- reactive({ HRaDeX::plot_n(list_params()) })
-  output[["plot_n_plot"]] <- renderPlot({ plot_n_plot_out() })
+  plot_n_plot_out <- reactive({ HRaDeX::plot_n(list_params(), fractional = use_fractional()) })
+  output[["plot_n_plot"]] <- renderPlot({ plot_n_plot_out()})
   
   plot_r2_hist_plot_out <- reactive({ HRaDeX::plot_r2_hist(list_params()) })
   output[["plot_r2_hist_plot"]] <- renderPlot({ plot_r2_hist_plot_out() })
@@ -343,8 +373,7 @@ app_server <- function(input, output, session) {
       
       renderPlot(HRaDeX::plot_uc_fit(fit_dat,
                                      fit_values,
-                                     duplex = T,
-                                     triplex = F))
+                                     fractional = use_fractional()))
     })
   })
   
@@ -356,29 +385,15 @@ app_server <- function(input, output, session) {
     
     tmp_dat <- dplyr::mutate(kin_dat(),
                       frac_deut_uptake = round(frac_deut_uptake, 4),
-                      deut_uptake = round(deut_uptake, 4))
+                      deut_uptake = round(deut_uptake, 4),
+                      err_frac_deut_uptake = round(err_frac_deut_uptake, 4),
+                      err_deut_uptake = round(err_deut_uptake, 4))
     
     dplyr::arrange(tmp_dat, Start, End, Exposure)
     
   })
   
-    
-  output[["params_list_data"]] <- DT::renderDataTable({
-    
-    # browser()
-    
-    tmp_dat <- dplyr::select(list_params(), -id)
-    
-    dplyr::mutate(tmp_dat,
-                  n_1 = round(n_1, 3),
-                  k_1 = round(k_1, 3),
-                  n_2 = round(n_2, 3),
-                  k_2 = round(k_2, 3),
-                  n_3 = round(n_3, 3),
-                  k_3 = round(k_3, 3),
-                  r2 = round(r2, 4))
-  })
-  
+
   ##
   
   output[["download_uc_table"]] <- downloadHandler(
