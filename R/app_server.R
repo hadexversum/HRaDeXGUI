@@ -293,17 +293,19 @@ app_server <- function(input, output, session) {
     
   })
   
+  hires_components_plot <- reactive({
+    
+    HRaDeX::plot_hires_components(hires_params(), 
+                                  fractional = use_fractional())
+  })
+  
   ###################
   ## TAB: OVERVIEW ##
   ###################
   
-  output[["hires_plot_out"]] <- renderPlot({
-    
-    hires_plot()
-    
-  })
-
-  ##
+  output[["hires_plot_out"]] <- renderPlot({ hires_plot() })
+  
+  output[["hires_components_plot_out"]] <- renderPlot({ hires_components_plot() })
 
   plot_cov_class_plot_out <- reactive({ HRaDeX::plot_cov_class(list_params(), fractional = use_fractional()) })
   output[["plot_cov_class_plot"]] <- renderPlot({ plot_cov_class_plot_out() })

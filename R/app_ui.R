@@ -79,7 +79,7 @@ app_ui <- function(request) {
                   ),
                   checkboxInput_h(
                     inputId = "is_FD",
-                    label = "Use as FD control or time point?"
+                    label = "Use as FD control instead of time point?"
                   )
                 )
                 
@@ -190,6 +190,7 @@ app_ui <- function(request) {
                   column(
                     width = 9,
                     plotOutput_h("hires_plot_out"),
+                    plotOutput_h("hires_components_plot_out"),
                     plotOutput_h("plot_cov_class_plot"),
                     fluidRow(
                       column(
@@ -231,17 +232,20 @@ app_ui <- function(request) {
             tabPanel(
               "Params",
               DT::dataTableOutput("params_list_data"),
-              downloadButton("download_fit_params_table", "Save table (.csv)")
+              downloadButton("download_fit_params_table", "Save table (.csv)"),
+              br()
             ),
             tabPanel(
               "Plots",
               class = "HaDeX-tab-content-element",
-              hadex_with_spinner(uiOutput("plot_fit_plots"))
+              hadex_with_spinner(uiOutput("plot_fit_plots")),
+              br()
             ),
             tabPanel(
               "Plots Data",
               DT::dataTableOutput("uc_data"),
-              downloadButton("download_uc_table", "Save table (.csv)") 
+              downloadButton("download_uc_table", "Save table (.csv)"),
+              br()
             )
           )
         )
