@@ -39,10 +39,15 @@ app_ui <- function(request) {
           ## state settings
           # mod_settings_state_ui("fit_state", "SINGLE"),
           collapsible_card(
-            title = "State",
+            title = "Uptake calculations",
             selectizeInput_h(
               inputId = "fit_state",
               label = "Select state"
+            ),
+            checkboxInput_h(
+              inputId = "replicate",
+              label = "Use replicate data?",
+              value = FALSE
             ),
             fancy_icon = "cogs"
           ),
@@ -62,7 +67,7 @@ app_ui <- function(request) {
                 ),
                 checkboxInput_h(
                   inputId = "fractional",
-                  label = "Perform analysis on fractional values",
+                  label = "Perform analysis on fractional values?",
                   value = TRUE
                 )
               ),

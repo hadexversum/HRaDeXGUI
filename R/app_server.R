@@ -99,6 +99,16 @@ app_server <- function(input, output, session) {
   })
   
   ##
+  
+  use_replicate <- eventReactive(input[["do_run"]],{
+    
+    validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
+    
+    input[["replicate"]]
+    
+  })
+  
+  ##
 
   fit_control <- eventReactive(input[["do_run"]], {
 
@@ -219,6 +229,10 @@ app_server <- function(input, output, session) {
     if(use_fractional() != input[["fractional"]]) params_ready(-1)
   })
   
+  observe({
+    if(use_replicate() != input[["replicate"]]) params_ready(-1)
+  })
+  
   ##
   
   output[["run_status"]] <- renderText({
@@ -236,7 +250,7 @@ app_server <- function(input, output, session) {
   })
 
   observe({
-    if(all(params_fixed() == fit_k_params()) & input[["fit_maxiter"]] == fit_control()[["maxiter"]] & input[["fit_scale"]] == fit_control()[["scale"]] & input[["type"]] == workflow_type() & fit_state() == input[["fit_state"]] & p_time_0() == as.numeric(input[["time_0"]]) & p_time_100() == as.numeric(input[["time_100"]]) & input[["is_FD"]] == fd_check() & use_fractional() == input[["fractional"]]) params_ready(1)
+    if(all(params_fixed() == fit_k_params()) & input[["fit_maxiter"]] == fit_control()[["maxiter"]] & input[["fit_scale"]] == fit_control()[["scale"]] & input[["type"]] == workflow_type() & fit_state() == input[["fit_state"]] & p_time_0() == as.numeric(input[["time_0"]]) & p_time_100() == as.numeric(input[["time_100"]]) & input[["is_FD"]] == fd_check() & use_fractional() == input[["fractional"]] & use_replicate() == input[["replicate"]]) params_ready(1)
   })
 
   ## checks
@@ -258,6 +272,7 @@ app_server <- function(input, output, session) {
                             state = fit_state(), #s_fit_state %()% state,
                             time_0 = p_time_0(),
                             time_100 = p_time_100(),
+                            replicate = use_replicate(),
                             FD = fd_check())
 
 
@@ -375,7 +390,8 @@ app_server <- function(input, output, session) {
       
       renderPlot(HRaDeX::plot_uc_fit(fit_dat,
                                      fit_values,
-                                     fractional = use_fractional()))
+                                     fractional = use_fractional(),
+                                     replicate = use_replicate()))
     })
   })
   
