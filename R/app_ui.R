@@ -208,7 +208,7 @@ app_ui <- function(request) {
                       ),
                       column(
                         width = 4,
-                        plotOutput_h("plot_r2_hist_plot")
+                        plotOutput_h("plot_rss_hist_plot")
                       )
                     ),
                     fluidRow(

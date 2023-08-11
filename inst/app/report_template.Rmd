@@ -65,6 +65,6 @@ plot_n_plot_out()
 ```
 
 ```{r echo = FALSE, results = "asis", warning = FALSE, message = FALSE}
-plot_r2_hist_plot_out()
+plot_rss_hist_plot_out()
 ```
 

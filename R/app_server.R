@@ -285,6 +285,8 @@ app_server <- function(input, output, session) {
     message(paste0("Workflow type ", workflow_type()))
     message("Fit params:")
     message(fit_k_params())
+    
+    # browser()
 
     HRaDeX::create_fit_dataset(kin_dat(),
                                control = fit_control(),
@@ -331,8 +333,8 @@ app_server <- function(input, output, session) {
   plot_n_plot_out <- reactive({ HRaDeX::plot_n(list_params(), fractional = use_fractional()) })
   output[["plot_n_plot"]] <- renderPlot({ plot_n_plot_out()})
   
-  plot_r2_hist_plot_out <- reactive({ HRaDeX::plot_r2_hist(list_params()) })
-  output[["plot_r2_hist_plot"]] <- renderPlot({ plot_r2_hist_plot_out() })
+  plot_rss_hist_plot_out <- reactive({ HRaDeX::plot_rss_hist(list_params()) })
+  output[["plot_rss_hist_plot"]] <- renderPlot({ plot_rss_hist_plot_out() })
   
   fit_info_txt <- reactive({ HRaDeX::get_fit_values_info(list_params()) })
 
@@ -364,7 +366,7 @@ app_server <- function(input, output, session) {
                   k_2 = round(k_2, 3),
                   n_3 = round(n_3, 3),
                   k_3 = round(k_3, 3),
-                  r2 = round(r2, 4))
+                  rss = round(rss, 4))
   })
   
   output[["download_fit_params_table"]] <- downloadHandler(
