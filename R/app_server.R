@@ -366,7 +366,8 @@ app_server <- function(input, output, session) {
                   k_2 = round(k_2, 3),
                   n_3 = round(n_3, 3),
                   k_3 = round(k_3, 3),
-                  rss = round(rss, 4))
+                  rss = round(rss, 4),
+                  bic = round(bic, 2))
   })
   
   output[["download_fit_params_table"]] <- downloadHandler(
