@@ -53,18 +53,14 @@ cat(fit_info_txt())
 ```
 
 ```{r echo = FALSE, results = "asis", warning = FALSE, message = FALSE}
+hires_plot()
+```
+
+```{r echo = FALSE, results = "asis", warning = FALSE, message = FALSE}
 plot_cov_class_plot_out()
 ```
 
 ```{r echo = FALSE, results = "asis", warning = FALSE, message = FALSE}
-plot_3_exp_map_v2_plot_out()
-```
-
-```{r echo = FALSE, results = "asis", warning = FALSE, message = FALSE}
-plot_n_plot_out()
-```
-
-```{r echo = FALSE, results = "asis", warning = FALSE, message = FALSE}
-plot_rss_hist_plot_out()
+gridExtra::grid.arrange(plot_n_plot_out(), plot_rss_hist_plot_out(), nrow = 1)
 ```
 

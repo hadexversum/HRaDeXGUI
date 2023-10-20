@@ -238,7 +238,8 @@ app_ui <- function(request) {
               "Params",
               DT::dataTableOutput("params_list_data"),
               downloadButton("download_fit_params_table", "Save table (.csv)"),
-              br()
+              br(),
+              plotOutput_h("plot_selected_uc")
             ),
             tabPanel(
               "Plots",

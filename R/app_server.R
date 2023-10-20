@@ -359,7 +359,7 @@ app_server <- function(input, output, session) {
     
     tmp_dat <- dplyr::select(list_params(), -id)
     
-    dplyr::mutate(tmp_dat,
+    tmp <- dplyr::mutate(tmp_dat,
                   n_1 = round(n_1, 3),
                   k_1 = round(k_1, 3),
                   n_2 = round(n_2, 3),
@@ -368,6 +368,14 @@ app_server <- function(input, output, session) {
                   k_3 = round(k_3, 3),
                   rss = round(rss, 4),
                   bic = round(bic, 2))
+    
+    DT::datatable(data = tmp,
+                  class = "table-bordered table-condensed",
+                  extensions = "Buttons",
+                  selection = "single",
+                  options = list(pageLength = 10, dom = "tip", autoWidth = TRUE, target = 'cell'),
+                  filter = "bottom",
+                  rownames = FALSE)
   })
   
   output[["download_fit_params_table"]] <- downloadHandler(
@@ -376,6 +384,26 @@ app_server <- function(input, output, session) {
       write.csv(dplyr::select(list_params(), -id), file)
     }
   )
+  
+  output[["plot_selected_uc"]] <- renderPlot({
+    
+    # browser()
+    
+    validate(need(!is.null(input[["params_list_data_rows_selected"]]), ""))
+    i = input[["params_list_data_rows_selected"]]
+    
+    fit_dat <- dplyr::filter(kin_dat(),
+                             Sequence == list_params()[i, "sequence"],
+                             Start == list_params()[i, "start"])
+    
+    fit_values <- list_params()[i, ]
+    
+    HRaDeX::plot_uc_fit(fit_dat,
+                        fit_values,
+                        fractional = use_fractional(),
+                        replicate = use_replicate())
+    
+  })
   
   ################
   ## TAB: PLOTS ##
