@@ -316,11 +316,21 @@ app_server <- function(input, output, session) {
                                   fractional = use_fractional())
   })
   
+  hires_mono_plot <- reactive({
+    
+    mono_dat <- HRaDeX::create_monotony(hires_params())
+    
+    HRaDeX::plot_monotony(mono_dat)
+    
+  })
+  
   ###################
   ## TAB: OVERVIEW ##
   ###################
   
   output[["hires_plot_out"]] <- renderPlot({ hires_plot() })
+  
+  output[["hires_mono_plot_out"]] <- renderPlot({ hires_mono_plot() }) 
   
   output[["hires_components_plot_out"]] <- renderPlot({ hires_components_plot() })
 
