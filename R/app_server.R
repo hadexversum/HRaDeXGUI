@@ -330,7 +330,7 @@ app_server <- function(input, output, session) {
   
   output[["hires_plot_out"]] <- renderPlot({ hires_plot() })
   
-  output[["hires_mono_plot_out"]] <- renderPlot({ hires_mono_plot() }) 
+  # output[["hires_mono_plot_out"]] <- renderPlot({ hires_mono_plot() }) 
   
   output[["hires_components_plot_out"]] <- renderPlot({ hires_components_plot() })
 

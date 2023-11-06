@@ -195,7 +195,7 @@ app_ui <- function(request) {
                   column(
                     width = 9,
                     plotOutput_h("hires_plot_out"),
-                    plotOutput_h("hires_mono_plot_out"),
+                    # plotOutput_h("hires_mono_plot_out"),
                     plotOutput_h("hires_components_plot_out"),
                     plotOutput_h("plot_cov_class_plot"),
                     fluidRow(
