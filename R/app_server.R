@@ -6,6 +6,8 @@
 #' @noRd
 app_server <- function(input, output, session) {
 
+  apply_server_settings()
+  
   p_states_chosen_protein <- reactive(unique(dat()[["State"]]))
 
   observe({
@@ -89,6 +91,12 @@ app_server <- function(input, output, session) {
   })
 
   ##
+  
+  fit_protein <- reactive({
+    
+    unique(dplyr::filter(dat(), State == fit_state())[["Protein"]])
+    
+  })
   
   use_fractional <- eventReactive(input[["do_run"]],{
     
@@ -330,7 +338,7 @@ app_server <- function(input, output, session) {
   
   output[["hires_plot_out"]] <- renderPlot({ hires_plot() })
   
-  # output[["hires_mono_plot_out"]] <- renderPlot({ hires_mono_plot() }) 
+  # output[["hires_mono_plot_out"]] <- renderPlot({ hires_mono_plot() })
   
   output[["hires_components_plot_out"]] <- renderPlot({ hires_components_plot() })
 
@@ -388,8 +396,18 @@ app_server <- function(input, output, session) {
                   rownames = FALSE)
   })
   
+  ##
+  
+  fit_filename <- reactive({
+    
+    paste0("fit_data_", fit_protein(),"-", fit_state(), ".csv")
+    
+  })
+  
+  ##
+  
   output[["download_fit_params_table"]] <- downloadHandler(
-    filename = "fit_params_data.csv",
+    filename = fit_filename(),
     content = function(file){
       write.csv(dplyr::select(list_params(), -id), file)
     }
@@ -455,11 +473,25 @@ app_server <- function(input, output, session) {
 
   ##
   
+  uc_filename <- reactive({
+    
+    paste0("uc_data_", fit_protein(),"-", fit_state(), ".csv")
+    
+  })
+  
   output[["download_uc_table"]] <- downloadHandler(
-      filename = "uc_data.csv",
+      filename = uc_filename(),
       content = function(file){
         write.csv(kin_dat(), file)
       }
   )
+  
+}
+
+#' @noRd
+apply_server_settings <- function(){
+  
+  # shinyhelper::observe_helpers(help_dir = app_sys("app/helpfiles"))
+  
   
 }
