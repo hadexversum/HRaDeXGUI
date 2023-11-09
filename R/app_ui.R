@@ -8,6 +8,7 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
+    apply_ui_settings(),
     # Your application UI logic
     fluidPage(
       br(),
@@ -294,4 +295,9 @@ golem_add_external_resources <- function() {
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
   )
+}
+
+#' @noRd
+apply_ui_settings <- function(){
+  
 }
