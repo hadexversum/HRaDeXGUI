@@ -7,6 +7,7 @@
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
+    
     golem_add_external_resources(),
     apply_ui_settings(),
     # Your application UI logic
@@ -59,13 +60,13 @@ app_ui <- function(request) {
             fluidRow(
               column(
                 width = 6, 
-                selectInput(
+                shinyhelper::helper(selectInput(
                   inputId = "time_0",
                   label = "Deut 0%",
                   choices = c(0, 0.001, 0.167, 1),
                   selected = 0.001,
                   multiple = FALSE
-                ),
+                )),
                 checkboxInput_h(
                   inputId = "fractional",
                   label = "Perform analysis on fractional values?",
@@ -124,7 +125,7 @@ app_ui <- function(request) {
                              min = 0, max = 30, step = 0.5),
                 numericInput(inputId = "k_fast_start",
                              label = "Initial value",
-                             value = 1,
+                             value = 3,
                              min = 0, max = 30, step = 0.5)
               ),
               div(
@@ -139,7 +140,7 @@ app_ui <- function(request) {
                              min = 0, max = 30, step = 0.1),
                 numericInput(inputId = "k_medium_start",
                              label = "Initial value",
-                             value = 0.1,
+                             value = 0.3,
                              min = 0, max = 30, step = 0.1),
               ),
               div(
@@ -151,10 +152,10 @@ app_ui <- function(request) {
                 numericInput(inputId = "k_slow_lower",
                              label = "Lower boundary",
                              value = 0.0001,
-                             min = 0.0001, max = 30, step = 0.01),
+                             min = 0.00001, max = 30, step = 0.01),
                 numericInput(inputId = "k_slow_start",
                              label = "Initial value",
-                             value = 0.01,
+                             value = 0.03,
                              min = 0, max = 30, 0.01)
                 
               )
@@ -195,10 +196,10 @@ app_ui <- function(request) {
                 fluidRow(
                   column(
                     width = 9,
-                    plotOutput_h("hires_plot_out"),
+                    ggiraph::girafeOutput("hires_plot_out"),
                     # plotOutput_h("hires_mono_plot_out"),
-                    plotOutput_h("hires_components_plot_out"),
-                    plotOutput_h("plot_cov_class_plot"),
+                    ggiraph::girafeOutput("hires_components_plot_out"),
+                    ggiraph::girafeOutput("plot_cov_class_plot"),
                     fluidRow(
                       column(
                         width = 4,
@@ -299,5 +300,6 @@ golem_add_external_resources <- function() {
 
 #' @noRd
 apply_ui_settings <- function(){
+  
   
 }

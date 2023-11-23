@@ -6,7 +6,8 @@
 #' @noRd
 app_server <- function(input, output, session) {
 
-  apply_server_settings()
+  # apply_server_settings()
+  shinyhelper::observe_helpers(help_dir = "./inst/app/helpfiles")
   
   p_states_chosen_protein <- reactive(unique(dat()[["State"]]))
 
@@ -314,14 +315,14 @@ app_server <- function(input, output, session) {
   
   hires_plot <- reactive({
     
-    HRaDeX::plot_hires(hires_params())
+    HRaDeX::plot_interactive(HRaDeX::plot_hires, hires_params())
     
   })
   
   hires_components_plot <- reactive({
     
-    HRaDeX::plot_hires_components(hires_params(), 
-                                  fractional = use_fractional())
+    HRaDeX::plot_interactive(HRaDeX::plot_hires_components, hires_params(), 
+                             fractional = use_fractional())
   })
   
   hires_mono_plot <- reactive({
@@ -336,14 +337,14 @@ app_server <- function(input, output, session) {
   ## TAB: OVERVIEW ##
   ###################
   
-  output[["hires_plot_out"]] <- renderPlot({ hires_plot() })
+  output[["hires_plot_out"]] <- ggiraph::renderGirafe({ ggobj = hires_plot() })
   
   # output[["hires_mono_plot_out"]] <- renderPlot({ hires_mono_plot() })
   
-  output[["hires_components_plot_out"]] <- renderPlot({ hires_components_plot() })
+  output[["hires_components_plot_out"]] <- ggiraph::renderGirafe({ hires_components_plot() })
 
-  plot_cov_class_plot_out <- reactive({ HRaDeX::plot_cov_class(list_params(), fractional = use_fractional()) })
-  output[["plot_cov_class_plot"]] <- renderPlot({ plot_cov_class_plot_out() })
+  plot_cov_class_plot_out <- reactive({ HRaDeX::plot_interactive(HRaDeX::plot_cov_class, list_params(), fractional = use_fractional()) })
+  output[["plot_cov_class_plot"]] <- ggiraph::renderGirafe({ plot_cov_class_plot_out() })
   
   plot_3_exp_map_v2_plot_out <- reactive({ HRaDeX::plot_3_exp_map_v2(list_params()) })
   output[["plot_3_exp_map_v2_plot"]] <- renderPlot({ plot_3_exp_map_v2_plot_out() })
@@ -489,9 +490,9 @@ app_server <- function(input, output, session) {
 }
 
 #' @noRd
-apply_server_settings <- function(){
-  
-  # shinyhelper::observe_helpers(help_dir = app_sys("app/helpfiles"))
-  
-  
-}
+# apply_server_settings <- function(){
+#   
+#   shinyhelper::observe_helpers()
+#   
+#   
+# }
