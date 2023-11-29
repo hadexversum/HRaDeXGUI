@@ -337,7 +337,7 @@ app_server <- function(input, output, session) {
   ## TAB: OVERVIEW ##
   ###################
   
-  output[["hires_plot_out"]] <- ggiraph::renderGirafe({ ggobj = hires_plot() })
+  output[["hires_plot_out"]] <- ggiraph::renderGirafe({ hires_plot() })
   
   # output[["hires_mono_plot_out"]] <- renderPlot({ hires_mono_plot() })
   
@@ -346,14 +346,14 @@ app_server <- function(input, output, session) {
   plot_cov_class_plot_out <- reactive({ HRaDeX::plot_interactive(HRaDeX::plot_cov_class, list_params(), fractional = use_fractional()) })
   output[["plot_cov_class_plot"]] <- ggiraph::renderGirafe({ plot_cov_class_plot_out() })
   
-  plot_3_exp_map_v2_plot_out <- reactive({ HRaDeX::plot_3_exp_map_v2(list_params()) })
-  output[["plot_3_exp_map_v2_plot"]] <- renderPlot({ plot_3_exp_map_v2_plot_out() })
+  plot_params_map_plot_out <- reactive({ HRaDeX::plot_interactive(HRaDeX::plot_params_map,list_params()) })
+  output[["plot_3_exp_map_v2_plot"]] <- ggiraph::renderGirafe({ plot_params_map_plot_out() })
   
-  plot_n_plot_out <- reactive({ HRaDeX::plot_n(list_params(), fractional = use_fractional()) })
-  output[["plot_n_plot"]] <- renderPlot({ plot_n_plot_out()})
+  plot_n_plot_out <- reactive({ HRaDeX::plot_interactive(HRaDeX::plot_n, list_params(), fractional = use_fractional()) })
+  output[["plot_n_plot"]] <- ggiraph::renderGirafe({ plot_n_plot_out()})
   
-  plot_rss_hist_plot_out <- reactive({ HRaDeX::plot_rss_hist(list_params()) })
-  output[["plot_rss_hist_plot"]] <- renderPlot({ plot_rss_hist_plot_out() })
+  plot_rss_hist_plot_out <- reactive({ HRaDeX::plot_interactive(HRaDeX::plot_rss_hist, list_params()) })
+  output[["plot_rss_hist_plot"]] <- ggiraph::renderGirafe({ plot_rss_hist_plot_out() })
   
   fit_info_txt <- reactive({ HRaDeX::get_fit_values_info(list_params()) })
 
@@ -414,9 +414,7 @@ app_server <- function(input, output, session) {
     }
   )
   
-  output[["plot_selected_uc"]] <- renderPlot({
-    
-    # browser()
+  output[["plot_selected_uc_1"]] <- ggiraph::renderGirafe({
     
     validate(need(!is.null(input[["params_list_data_rows_selected"]]), ""))
     i = input[["params_list_data_rows_selected"]]
@@ -427,10 +425,30 @@ app_server <- function(input, output, session) {
     
     fit_values <- list_params()[i, ]
     
-    HRaDeX::plot_uc_fit(fit_dat,
-                        fit_values,
-                        fractional = use_fractional(),
-                        replicate = use_replicate())
+    HRaDeX::plot_interactive(HRaDeX::plot_fitted_uc, 
+                             fit_dat,
+                             fit_values,
+                             fractional = use_fractional(),
+                             replicate = use_replicate())
+    
+  })
+  
+  output[["plot_selected_uc_2"]] <- ggiraph::renderGirafe({
+    
+    validate(need(!is.null(input[["params_list_data_rows_selected"]]), ""))
+    i = input[["params_list_data_rows_selected"]]
+    
+    fit_dat <- dplyr::filter(kin_dat(),
+                             Sequence == list_params()[i, "sequence"],
+                             Start == list_params()[i, "start"])
+    
+    fit_values <- list_params()[i, ]
+    
+      HRaDeX::plot_interactive(HRaDeX::plot_singular_uc,
+                               fit_dat,
+                               fit_values,
+                               fractional = use_fractional(),
+                               replicate = use_replicate())
     
   })
   
@@ -448,10 +466,10 @@ app_server <- function(input, output, session) {
       
       fit_values <- list_params()[i, ]
       
-      renderPlot(HRaDeX::plot_uc_fit(fit_dat,
-                                     fit_values,
-                                     fractional = use_fractional(),
-                                     replicate = use_replicate()))
+      renderPlot(HRaDeX::plot_double_uc(fit_dat,
+                                        fit_values,
+                                        fractional = use_fractional(),
+                                        replicate = use_replicate()))
     })
   })
   

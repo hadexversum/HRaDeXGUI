@@ -203,15 +203,15 @@ app_ui <- function(request) {
                     fluidRow(
                       column(
                         width = 4,
-                        plotOutput_h("plot_3_exp_map_v2_plot")
+                        ggiraph::girafeOutput("plot_3_exp_map_v2_plot")
                       ),
                       column(
                         width = 4,
-                        plotOutput_h("plot_n_plot")
+                        ggiraph::girafeOutput("plot_n_plot")
                       ),
                       column(
                         width = 4,
-                        plotOutput_h("plot_rss_hist_plot")
+                        ggiraph::girafeOutput("plot_rss_hist_plot")
                       )
                     ),
                     fluidRow(
@@ -242,7 +242,11 @@ app_ui <- function(request) {
               DT::dataTableOutput("params_list_data"),
               downloadButton("download_fit_params_table", "Save table (.csv)"),
               br(),
-              plotOutput_h("plot_selected_uc")
+              splitLayout(
+                ggiraph::girafeOutput("plot_selected_uc_1"),
+                ggiraph::girafeOutput("plot_selected_uc_2")
+              )
+              
             ),
             tabPanel(
               "Plots",

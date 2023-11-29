@@ -62,7 +62,7 @@ hadex_with_helper <- function(tag, content) if (not_null(content)) shinyhelper::
   shiny_tag = tag,
   content = content,
   type = "markdown",
-  buttonLabel = "Close",
+  # buttonLabel = "Close",
   easyClose = TRUE,
   icon = "far fa-question-circle",
   colour = "#856C9D"
