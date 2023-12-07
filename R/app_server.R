@@ -315,14 +315,16 @@ app_server <- function(input, output, session) {
   
   hires_plot <- reactive({
     
-    HRaDeX::plot_interactive(HRaDeX::plot_hires, hires_params())
+    HRaDeX::plot_hires(hires_params(),
+                       interactive = T)
     
   })
   
   hires_components_plot <- reactive({
     
-    HRaDeX::plot_interactive(HRaDeX::plot_hires_components, hires_params(), 
-                             fractional = use_fractional())
+    HRaDeX::plot_hires_components(hires_params(), 
+                                  fractional = use_fractional(),
+                                  interactive = T)
   })
   
   hires_mono_plot <- reactive({
@@ -343,7 +345,9 @@ app_server <- function(input, output, session) {
   
   output[["hires_components_plot_out"]] <- ggiraph::renderGirafe({ hires_components_plot() })
 
-  plot_cov_class_plot_out <- reactive({ HRaDeX::plot_interactive(HRaDeX::plot_cov_class, list_params(), fractional = use_fractional()) })
+  plot_cov_class_plot_out <- reactive({ HRaDeX::plot_cov_class(list_params(), 
+                                                               fractional = use_fractional(),
+                                                               interactive = T) })
   output[["plot_cov_class_plot"]] <- ggiraph::renderGirafe({ plot_cov_class_plot_out() })
   
   plot_params_map_plot_out <- reactive({ HRaDeX::plot_interactive(HRaDeX::plot_params_map,list_params()) })
