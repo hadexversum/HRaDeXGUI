@@ -327,6 +327,12 @@ app_server <- function(input, output, session) {
                                   interactive = T)
   })
   
+  esimated_k_plot <- reactive({
+    
+    HRaDeX::plot_estimated_k(hires_params(),
+                             interactive = T)
+  })
+  
   hires_mono_plot <- reactive({
     
     mono_dat <- HRaDeX::create_monotony(hires_params())
@@ -341,6 +347,7 @@ app_server <- function(input, output, session) {
   
   output[["hires_plot_out"]] <- ggiraph::renderGirafe({ hires_plot() })
   
+  output[["estimated_k_hires_plot_out"]] <- ggiraph::renderGirafe({ esimated_k_plot() })
   # output[["hires_mono_plot_out"]] <- renderPlot({ hires_mono_plot() })
   
   output[["hires_components_plot_out"]] <- ggiraph::renderGirafe({ hires_components_plot() })
@@ -487,7 +494,8 @@ app_server <- function(input, output, session) {
                       frac_deut_uptake = round(frac_deut_uptake, 4),
                       deut_uptake = round(deut_uptake, 4),
                       err_frac_deut_uptake = round(err_frac_deut_uptake, 4),
-                      err_deut_uptake = round(err_deut_uptake, 4))
+                      err_deut_uptake = round(err_deut_uptake, 4),
+                      k_est = round(k_est, 4))
     
     dplyr::arrange(tmp_dat, Start, End, Exposure)
     

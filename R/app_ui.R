@@ -197,6 +197,7 @@ app_ui <- function(request) {
                   column(
                     width = 9,
                     ggiraph::girafeOutput("hires_plot_out"),
+                    ggiraph::girafeOutput("estimated_k_hires_plot_out"),
                     # plotOutput_h("hires_mono_plot_out"),
                     ggiraph::girafeOutput("hires_components_plot_out"),
                     ggiraph::girafeOutput("plot_cov_class_plot"),
