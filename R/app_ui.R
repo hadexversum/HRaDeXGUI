@@ -7,7 +7,7 @@
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
-    
+
     golem_add_external_resources(),
     apply_ui_settings(),
     # Your application UI logic
@@ -59,7 +59,7 @@ app_ui <- function(request) {
             title = "Deuterium uptake controls",
             fluidRow(
               column(
-                width = 6, 
+                width = 6,
                 shinyhelper::helper(selectInput(
                   inputId = "time_0",
                   label = "Deut 0%",
@@ -89,7 +89,7 @@ app_ui <- function(request) {
                     label = "Use as FD control instead of time point?"
                   )
                 )
-                
+
               )
             ),
             fancy_icon = "cogs"
@@ -108,7 +108,7 @@ app_ui <- function(request) {
             fancy_icon = "cogs"
           ),
           br(),
-          
+
           ## class settings
           collapsible_card(
             title = "Class definition",
@@ -157,7 +157,7 @@ app_ui <- function(request) {
                              label = "Initial value",
                              value = 0.03,
                              min = 0, max = 30, 0.01)
-                
+
               )
             ),
             # plotOutput_h("k_params_plot"),
@@ -179,7 +179,7 @@ app_ui <- function(request) {
             title = "Fit options",
             numericInput(inputId = "fit_maxiter",
                          label = "Select number of iterations",
-                         value = 100, 
+                         value = 100,
                          min = 10, max = 1000, step = 10),
             selectInput(inputId = "fit_scale",
                         label = "Select method",
@@ -196,41 +196,41 @@ app_ui <- function(request) {
                 fluidRow(
                   column(
                     width = 9,
-                    ggiraph::girafeOutput("hires_plot_out"),
-                    ggiraph::girafeOutput("estimated_k_hires_plot_out"),
+                    ggiraph::girafeOutput("hires_plot_out", height = '90%'),
+                    ggiraph::girafeOutput("estimated_k_hires_plot_out", height = '90%'),
                     # plotOutput_h("hires_mono_plot_out"),
-                    ggiraph::girafeOutput("hires_components_plot_out"),
-                    ggiraph::girafeOutput("plot_cov_class_plot"),
+                    ggiraph::girafeOutput("hires_components_plot_out", height = '90%'),
+                    ggiraph::girafeOutput("plot_cov_class_plot", height = '90%'),
                     fluidRow(
                       column(
                         width = 4,
-                        ggiraph::girafeOutput("plot_3_exp_map_v2_plot")
+                        ggiraph::girafeOutput("plot_3_exp_map_v2_plot", height = '90%')
                       ),
                       column(
                         width = 4,
-                        ggiraph::girafeOutput("plot_n_plot")
+                        ggiraph::girafeOutput("plot_n_plot", height = '90%')
                       ),
                       column(
                         width = 4,
-                        ggiraph::girafeOutput("plot_rss_hist_plot")
+                        ggiraph::girafeOutput("plot_rss_hist_plot", height = '90%')
                       )
                     ),
                     fluidRow(
                       column(
-                        width = 9, 
+                        width = 9,
                         verbatimTextOutput("fit_info")
                       )
                     )
                   ),
                   column(
-                    width = 3, 
-                   
+                    width = 3,
+
                     br(),
                     br(),
                     img(src='./www/rgb_plaster.png', width = "80%",  align = "left")
                   )
                 ),
-                
+
                 downloadButton(
                   outputId = "fit_report",
                   label = "Create report",
@@ -247,7 +247,7 @@ app_ui <- function(request) {
                 ggiraph::girafeOutput("plot_selected_uc_1"),
                 ggiraph::girafeOutput("plot_selected_uc_2")
               )
-              
+
             ),
             tabPanel(
               "Plots",
@@ -305,6 +305,6 @@ golem_add_external_resources <- function() {
 
 #' @noRd
 apply_ui_settings <- function(){
-  
-  
+
+
 }
