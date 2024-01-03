@@ -387,26 +387,36 @@ app_server <- function(input, output, session) {
   
   output[["params_list_data"]] <- DT::renderDataTable({
     
-    tmp_dat <- dplyr::select(list_params(), -id)
-    
-    tmp <- dplyr::mutate(tmp_dat,
+   tmp <- dplyr::mutate(list_params(),
                   n_1 = round(n_1, 3),
                   k_1 = round(k_1, 3),
                   n_2 = round(n_2, 3),
                   k_2 = round(k_2, 3),
                   n_3 = round(n_3, 3),
                   k_3 = round(k_3, 3),
+                  k_est = round(k_est, 4),
                   rss = round(rss, 4),
                   bic = round(bic, 2))
     
-    DT::datatable(data = tmp,
+    dt <- DT::datatable(data = tmp,
                   class = "table-bordered table-condensed",
                   extensions = "Buttons",
                   selection = "single",
-                  options = list(pageLength = 10, dom = "tip", autoWidth = TRUE, target = 'cell'),
+                  options = list(pageLength = 10, 
+                                 dom = "tip", 
+                                 autoWidth = TRUE, 
+                                 columnDefs = list(list(targets = 1, visible = FALSE)),
+                                 target = 'cell'),
                   filter = "bottom",
                   rownames = FALSE)
-  })
+  
+    dt_length <- nrow(tmp)
+    
+    DT::formatStyle(dt, "id",  
+                backgroundColor = DT::styleEqual(c(1:dt_length), tmp[["color"]]))
+    
+    })
+  
   
   ##
   
@@ -494,8 +504,7 @@ app_server <- function(input, output, session) {
                       frac_deut_uptake = round(frac_deut_uptake, 4),
                       deut_uptake = round(deut_uptake, 4),
                       err_frac_deut_uptake = round(err_frac_deut_uptake, 4),
-                      err_deut_uptake = round(err_deut_uptake, 4),
-                      k_est = round(k_est, 4))
+                      err_deut_uptake = round(err_deut_uptake, 4))
     
     dplyr::arrange(tmp_dat, Start, End, Exposure)
     
