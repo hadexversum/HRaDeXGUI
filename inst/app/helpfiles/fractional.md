@@ -1,5 +1,0 @@
-## Helper
-
-test
-test
-test

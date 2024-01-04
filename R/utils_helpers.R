@@ -103,6 +103,8 @@ hadex_decorate <- function(fun, with_helper = TRUE, is_output = TRUE, with_spinn
 }
 
 
+
+
 # manually decorating to specify default parameter values
 
 selectizeInput_h <- function(inputId, label, choices = "", ...,
@@ -122,3 +124,37 @@ plotOutput_h <- hadex_decorate(shiny::plotOutput)
 uiOutput_h <- hadex_decorate(shiny::uiOutput)
 dataTableOutput_h <- hadex_decorate(DT::dataTableOutput)
 girafeOutput_h <- hadex_decorate(ggiraph::girafeOutput)
+
+
+
+## SUPERS
+
+super_checkboxInput <- function(inputId, label, value, ...){
+  
+  shinyhelper::helper(checkboxInput(inputId = inputId, 
+                              label = label, 
+                              value = value, ...),
+                  type = "markdown",
+                  content = inputId
+                  )
+  
+}
+
+super_girafeOutput <- function(outputId, ...){
+  
+  shinyhelper::helper(
+    ggiraph::girafeOutput(outputId = outputId, ...),
+    type = "markdown",
+    content = outputId
+  )
+  
+}
+
+super_selectInput <- function(inputId, ...){
+  
+  shinyhelper::helper(
+    selectInput(inputId = inputId, ...),
+    type = "markdown",
+    content = inputId
+  )
+}

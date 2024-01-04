@@ -7,7 +7,7 @@
 app_server <- function(input, output, session) {
 
   # apply_server_settings()
-  shinyhelper::observe_helpers(help_dir = "./inst/app/helpfiles")
+  shinyhelper::observe_helpers()
   
   p_states_chosen_protein <- reactive(unique(dat()[["State"]]))
 
@@ -513,14 +513,10 @@ app_server <- function(input, output, session) {
 
   ##
   
-  uc_filename <- reactive({
-    
-    paste0("uc_data_", fit_protein(),"-", fit_state(), ".csv")
-    
-  })
-  
   output[["download_uc_table"]] <- downloadHandler(
-      filename = uc_filename(),
+      filename =function(){
+        paste0("uc_data_", fit_protein(),"-", fit_state(), ".csv")
+      },
       content = function(file){
         write.csv(kin_dat(), file)
       }

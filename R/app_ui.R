@@ -60,14 +60,14 @@ app_ui <- function(request) {
             fluidRow(
               column(
                 width = 6,
-                shinyhelper::helper(selectInput(
+                super_selectInput(
                   inputId = "time_0",
                   label = "Deut 0%",
                   choices = c(0, 0.001, 0.167, 1),
                   selected = 0.001,
                   multiple = FALSE
-                )),
-                checkboxInput_h(
+                ),
+                super_checkboxInput(
                   inputId = "fractional",
                   label = "Perform analysis on fractional values?",
                   value = TRUE
@@ -84,9 +84,10 @@ app_ui <- function(request) {
                     selected = 1440,
                     multiple = FALSE
                   ),
-                  checkboxInput_h(
+                  super_checkboxInput(
                     inputId = "is_FD",
-                    label = "Use as FD control instead of time point?"
+                    label = "Use as FD control instead of time point?",
+                    value = FALSE
                   )
                 )
 
@@ -196,7 +197,7 @@ app_ui <- function(request) {
                 fluidRow(
                   column(
                     width = 9,
-                    ggiraph::girafeOutput("hires_plot_out", height = '90%'),
+                    super_girafeOutput(outputId = "hires_plot_out", height = '90%'),
                     ggiraph::girafeOutput("estimated_k_hires_plot_out", height = '90%'),
                     # plotOutput_h("hires_mono_plot_out"),
                     ggiraph::girafeOutput("hires_components_plot_out", height = '90%'),
