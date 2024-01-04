@@ -417,19 +417,12 @@ app_server <- function(input, output, session) {
     
     })
   
-  
-  ##
-  
-  fit_filename <- reactive({
-    
-    paste0("fit_data_", fit_protein(),"-", fit_state(), ".csv")
-    
-  })
-  
   ##
   
   output[["download_fit_params_table"]] <- downloadHandler(
-    filename = fit_filename(),
+    filename = function(){
+      paste0("fit_data_", fit_protein(),"-", fit_state(), ".csv")
+    }
     content = function(file){
       write.csv(dplyr::select(list_params(), -id), file)
     }
@@ -514,7 +507,7 @@ app_server <- function(input, output, session) {
   ##
   
   output[["download_uc_table"]] <- downloadHandler(
-      filename =function(){
+      filename = function(){
         paste0("uc_data_", fit_protein(),"-", fit_state(), ".csv")
       },
       content = function(file){
