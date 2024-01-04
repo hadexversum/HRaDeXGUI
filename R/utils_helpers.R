@@ -143,7 +143,7 @@ super_checkboxInput <- function(inputId, label, value, ...){
 super_girafeOutput <- function(outputId, ...){
   
   shinyhelper::helper(
-    ggiraph::girafeOutput(outputId = outputId, ...),
+    hadex_with_spinner(ggiraph::girafeOutput(outputId = outputId, ...)),
     type = "markdown",
     content = outputId
   )

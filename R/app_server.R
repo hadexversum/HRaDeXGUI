@@ -7,7 +7,7 @@
 app_server <- function(input, output, session) {
 
   # apply_server_settings()
-  shinyhelper::observe_helpers()
+  shinyhelper::observe_helpers(withMathJax = TRUE)
   
   p_states_chosen_protein <- reactive(unique(dat()[["State"]]))
 

@@ -198,9 +198,9 @@ app_ui <- function(request) {
                   column(
                     width = 9,
                     super_girafeOutput(outputId = "hires_plot_out", height = '90%'),
-                    ggiraph::girafeOutput("estimated_k_hires_plot_out", height = '90%'),
+                    super_girafeOutput(outputId = "estimated_k_hires_plot_out", height = '90%'),
                     # plotOutput_h("hires_mono_plot_out"),
-                    ggiraph::girafeOutput("hires_components_plot_out", height = '90%'),
+                    super_girafeOutput(outputId = "hires_components_plot_out", height = '90%'),
                     ggiraph::girafeOutput("plot_cov_class_plot", height = '90%'),
                     fluidRow(
                       column(

@@ -1,4 +1,4 @@
-## Use fractional values
+# Use fractional values
 
 Indicator if the values from different time points are to be scaled with maximal deuteration control.
 
