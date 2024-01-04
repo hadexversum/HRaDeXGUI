@@ -422,7 +422,7 @@ app_server <- function(input, output, session) {
   output[["download_fit_params_table"]] <- downloadHandler(
     filename = function(){
       paste0("fit_data_", fit_protein(),"-", fit_state(), ".csv")
-    }
+    },
     content = function(file){
       write.csv(dplyr::select(list_params(), -id), file)
     }
