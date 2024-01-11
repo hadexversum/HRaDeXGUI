@@ -515,6 +515,14 @@ app_server <- function(input, output, session) {
       }
   )
   
+  ##
+  
+  # output[["protein_structure"]] <- r3dmol::renderR3dmol({
+  
+  # HRaDeX::plot_3d_structure_hires()
+  
+  #})
+  
 }
 
 #' @noRd

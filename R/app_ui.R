@@ -261,6 +261,10 @@ app_ui <- function(request) {
               DT::dataTableOutput("uc_data"),
               downloadButton("download_uc_table", "Save table (.csv)"),
               br()
+            ),
+            tabPanel(
+              "Structure",
+              # r3dmol::r3dmolOutput("protein_structure")
             )
           )
         )
