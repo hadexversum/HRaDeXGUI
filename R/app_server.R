@@ -8,7 +8,7 @@ app_server <- function(input, output, session) {
 
   # apply_server_settings()
   shinyhelper::observe_helpers(withMathJax = TRUE)
-  
+
   p_states_chosen_protein <- reactive(unique(dat()[["State"]]))
 
   observe({
@@ -30,7 +30,7 @@ app_server <- function(input, output, session) {
       selected = min(p_times())
     )
   })
-  
+
   observe({
     updateSelectInput(
       session,
@@ -40,13 +40,13 @@ app_server <- function(input, output, session) {
     )
 
   })
-  
+
   observe({
-    
+
     input[["reset_class_def"]]
-    
+
     updateNumericInput(inputId = "k_fast_upper",
-                       value = 30) 
+                       value = 30)
     updateNumericInput(inputId = "k_fast_lower",
                        value = 1)
     updateNumericInput(inputId = "k_fast_start",
@@ -64,17 +64,17 @@ app_server <- function(input, output, session) {
     updateNumericInput(inputId = "k_slow_start",
                        value = 0.01)
   })
-  
+
   ##
-  
+
   output[["k_params_plot"]] <- renderUI({
-    
+
     renderPlot({
       HRaDeX::plot_start_params(params_fixed())
     })
-    
+
   })
-  
+
   ######################
   ####### PARAMS #######
   ######################
@@ -92,31 +92,31 @@ app_server <- function(input, output, session) {
   })
 
   ##
-  
+
   fit_protein <- reactive({
-    
+
     unique(dplyr::filter(dat(), State == fit_state())[["Protein"]])
-    
+
   })
-  
+
   use_fractional <- eventReactive(input[["do_run"]],{
-    
+
     validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
-    
+
     input[["fractional"]]
-    
+
   })
-  
+
   ##
-  
+
   use_replicate <- eventReactive(input[["do_run"]],{
-    
+
     validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
-    
+
     input[["replicate"]]
-    
+
   })
-  
+
   ##
 
   fit_control <- eventReactive(input[["do_run"]], {
@@ -147,27 +147,27 @@ app_server <- function(input, output, session) {
   })
 
   p_time_100 <- eventReactive(input[["do_run"]], {
-    
+
     validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
     as.numeric(input[["time_100"]])
-    
+
   })
-  
+
   p_time_0 <- eventReactive(input[["do_run"]], {
-    
+
     validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
     as.numeric(input[["time_0"]])
-    
+
   })
-  
+
   fd_check <- eventReactive(input[["do_run"]], {
-    
+
     validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
     input[["is_FD"]]
-    
+
   })
-  
-  
+
+
   ##
 
   # state_ok <- reactiveVal(0)
@@ -211,11 +211,11 @@ app_server <- function(input, output, session) {
   observe({
     if(p_time_0() != as.numeric(input[["time_0"]])) params_ready(-1)
   })
-  
+
   observe({
     if(p_time_100() != as.numeric(input[["time_100"]])) params_ready(-1)
   })
-  
+
   observe(
     if(input[["is_FD"]] != fd_check()) params_ready(-1)
   )
@@ -237,13 +237,13 @@ app_server <- function(input, output, session) {
   observe({
     if(use_fractional() != input[["fractional"]]) params_ready(-1)
   })
-  
+
   observe({
     if(use_replicate() != input[["replicate"]]) params_ready(-1)
   })
-  
+
   ##
-  
+
   output[["run_status"]] <- renderText({
 
     mes <- ""
@@ -270,7 +270,7 @@ app_server <- function(input, output, session) {
     validate(need(input[["do_run"]] > 0, "Run the analysis by pressing the button on the left."))
     validate(need(fit_state() %in% unique(dat()[["State"]]), "New file detected, rerun the analysis by pressing the button."))
     # validate(need(state_ok() == 1, "Please confirm state changes."))
-    
+
     # browser()
 
     message("Creating kinetic data")
@@ -294,7 +294,7 @@ app_server <- function(input, output, session) {
     message(paste0("Workflow type ", workflow_type()))
     message("Fit params:")
     message(fit_k_params())
-    
+
     # browser()
 
     HRaDeX::create_fit_dataset(kin_dat(),
@@ -305,73 +305,73 @@ app_server <- function(input, output, session) {
                                workflow = workflow_type())
   })
 
-  
+
   hires_params <- reactive({
-    
+
     HRaDeX::calculate_hires(list_params(),
                             fractional = use_fractional())
 
   })
-  
+
   hires_plot <- reactive({
-    
+
     HRaDeX::plot_hires(hires_params(),
                        interactive = T)
-    
+
   })
-  
+
   hires_components_plot <- reactive({
-    
-    HRaDeX::plot_hires_components(hires_params(), 
+
+    HRaDeX::plot_hires_components(hires_params(),
                                   fractional = use_fractional(),
                                   interactive = T)
   })
-  
+
   esimated_k_plot <- reactive({
-    
+
     HRaDeX::plot_estimated_k(hires_params(),
                              interactive = T)
   })
-  
+
   hires_mono_plot <- reactive({
-    
+
     mono_dat <- HRaDeX::create_monotony(hires_params())
-    
+
     HRaDeX::plot_monotony(mono_dat)
-    
+
   })
-  
+
   ###################
   ## TAB: OVERVIEW ##
   ###################
-  
+
   output[["hires_plot_out"]] <- ggiraph::renderGirafe({ hires_plot() })
-  
+
   output[["estimated_k_hires_plot_out"]] <- ggiraph::renderGirafe({ esimated_k_plot() })
   # output[["hires_mono_plot_out"]] <- renderPlot({ hires_mono_plot() })
-  
+
   output[["hires_components_plot_out"]] <- ggiraph::renderGirafe({ hires_components_plot() })
 
-  plot_cov_class_plot_out <- reactive({ HRaDeX::plot_cov_class(list_params(), 
+  plot_cov_class_plot_out <- reactive({ HRaDeX::plot_cov_class(list_params(),
                                                                fractional = use_fractional(),
                                                                interactive = T) })
   output[["plot_cov_class_plot"]] <- ggiraph::renderGirafe({ plot_cov_class_plot_out() })
-  
+
   plot_params_map_plot_out <- reactive({ HRaDeX::plot_interactive(HRaDeX::plot_params_map,list_params()) })
   output[["plot_3_exp_map_v2_plot"]] <- ggiraph::renderGirafe({ plot_params_map_plot_out() })
-  
+
   plot_n_plot_out <- reactive({ HRaDeX::plot_interactive(HRaDeX::plot_n, list_params(), fractional = use_fractional()) })
   output[["plot_n_plot"]] <- ggiraph::renderGirafe({ plot_n_plot_out()})
-  
+
   plot_rss_hist_plot_out <- reactive({ HRaDeX::plot_interactive(HRaDeX::plot_rss_hist, list_params()) })
   output[["plot_rss_hist_plot"]] <- ggiraph::renderGirafe({ plot_rss_hist_plot_out() })
-  
+
   fit_info_txt <- reactive({ HRaDeX::get_fit_values_info(list_params()) })
 
   output[["fit_info"]] <- renderText({ fit_info_txt() })
 
   ##
-  
+
   output[["fit_report"]] <- downloadHandler(
 
     filename <- "HRaDeX_Report.html",
@@ -380,13 +380,13 @@ app_server <- function(input, output, session) {
                         output_file = file, quiet = TRUE)
     }
   )
-  
+
   #################
   ## TAB: PARAMS ##
   #################
-  
+
   output[["params_list_data"]] <- DT::renderDataTable({
-    
+
    tmp <- dplyr::mutate(list_params(),
                   n_1 = round(n_1, 3),
                   k_1 = round(k_1, 3),
@@ -397,28 +397,28 @@ app_server <- function(input, output, session) {
                   k_est = round(k_est, 4),
                   rss = round(rss, 4),
                   bic = round(bic, 2))
-    
+
     dt <- DT::datatable(data = tmp,
                   class = "table-bordered table-condensed",
                   extensions = "Buttons",
                   selection = "single",
-                  options = list(pageLength = 10, 
-                                 dom = "tip", 
-                                 autoWidth = TRUE, 
+                  options = list(pageLength = 10,
+                                 dom = "tip",
+                                 autoWidth = TRUE,
                                  columnDefs = list(list(targets = 1, visible = FALSE)),
                                  target = 'cell'),
                   filter = "bottom",
                   rownames = FALSE)
-  
+
     dt_length <- nrow(tmp)
-    
-    DT::formatStyle(dt, "id",  
+
+    DT::formatStyle(dt, "id",
                 backgroundColor = DT::styleEqual(c(1:dt_length), tmp[["color"]]))
-    
+
     })
-  
+
   ##
-  
+
   output[["download_fit_params_table"]] <- downloadHandler(
     filename = function(){
       paste0("fit_data_", fit_protein(),"-", fit_state(), ".csv")
@@ -427,85 +427,85 @@ app_server <- function(input, output, session) {
       write.csv(dplyr::select(list_params(), -id), file)
     }
   )
-  
+
   output[["plot_selected_uc_1"]] <- ggiraph::renderGirafe({
-    
+
     validate(need(!is.null(input[["params_list_data_rows_selected"]]), ""))
     i = input[["params_list_data_rows_selected"]]
-    
+
     fit_dat <- dplyr::filter(kin_dat(),
                              Sequence == list_params()[i, "sequence"],
                              Start == list_params()[i, "start"])
-    
+
     fit_values <- list_params()[i, ]
-    
-    HRaDeX::plot_interactive(HRaDeX::plot_fitted_uc, 
+
+    HRaDeX::plot_interactive(HRaDeX::plot_fitted_uc,
                              fit_dat,
                              fit_values,
                              fractional = use_fractional(),
                              replicate = use_replicate())
-    
+
   })
-  
+
   output[["plot_selected_uc_2"]] <- ggiraph::renderGirafe({
-    
+
     validate(need(!is.null(input[["params_list_data_rows_selected"]]), ""))
     i = input[["params_list_data_rows_selected"]]
-    
+
     fit_dat <- dplyr::filter(kin_dat(),
                              Sequence == list_params()[i, "sequence"],
                              Start == list_params()[i, "start"])
-    
+
     fit_values <- list_params()[i, ]
-    
+
       HRaDeX::plot_interactive(HRaDeX::plot_singular_uc,
                                fit_dat,
                                fit_values,
                                fractional = use_fractional(),
                                replicate = use_replicate())
-    
+
   })
-  
+
   ################
   ## TAB: PLOTS ##
   ################
-  
+
   output[["plot_fit_plots"]] <- renderUI({
-    
+
     lapply(1:nrow(list_params()),  function(i){
-      
+
       fit_dat <- dplyr::filter(kin_dat(),
                                Sequence == list_params()[i, "sequence"],
                                Start == list_params()[i, "start"])
-      
+
       fit_values <- list_params()[i, ]
-      
+
       renderPlot(HRaDeX::plot_double_uc(fit_dat,
                                         fit_values,
                                         fractional = use_fractional(),
                                         replicate = use_replicate()))
     })
   })
-  
+
   #####################
   ## TAB: PLOTS DATA ##
   #####################
-  
+
   output[["uc_data"]] <- DT::renderDataTable({
-    
+
     tmp_dat <- dplyr::mutate(kin_dat(),
                       frac_deut_uptake = round(frac_deut_uptake, 4),
                       deut_uptake = round(deut_uptake, 4),
                       err_frac_deut_uptake = round(err_frac_deut_uptake, 4),
                       err_deut_uptake = round(err_deut_uptake, 4))
-    
+
     dplyr::arrange(tmp_dat, Start, End, Exposure)
-    
+
   })
-  
+
 
   ##
-  
+
   output[["download_uc_table"]] <- downloadHandler(
       filename = function(){
         paste0("uc_data_", fit_protein(),"-", fit_state(), ".csv")
@@ -514,21 +514,33 @@ app_server <- function(input, output, session) {
         write.csv(kin_dat(), file)
       }
   )
-  
-  ##
-  
-  # output[["protein_structure"]] <- r3dmol::renderR3dmol({
-  
-  # HRaDeX::plot_3d_structure_hires()
-  
-  #})
-  
+
+  #####################
+  ## TAB: STRUCTURE ##
+  #####################
+
+  protein_structure_out <- reactive({
+
+    validate(need(!is.null(input[["pdb_file"]]), "Please provide pdb file to see the 3D structure."))
+    validate(need(input[["do_run"]] > 0, "Run the analysis by pressing the button on the left."))
+
+    HRaDeX::plot_3d_structure_hires(hires_params = hires_params(),
+                                    pdb_file_path = input[["pdb_file"]][["datapath"]],
+                                    spin = input[["if_spin_structure"]])
+  })
+
+  output[["protein_structure"]] <- r3dmol::renderR3dmol({
+
+    protein_structure_out()
+
+  })
+
 }
 
 #' @noRd
 # apply_server_settings <- function(){
-#   
+#
 #   shinyhelper::observe_helpers()
-#   
-#   
+#
+#
 # }

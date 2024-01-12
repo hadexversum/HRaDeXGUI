@@ -109,7 +109,6 @@ app_ui <- function(request) {
             fancy_icon = "cogs"
           ),
           br(),
-
           ## class settings
           collapsible_card(
             title = "Class definition",
@@ -187,7 +186,19 @@ app_ui <- function(request) {
                         choices = c("levenberg"),
                         selected = "levenberg"),
             fancy_icon = "cogs"
-          )
+          ),
+          br(),
+          collapsible_card(
+            title = "Structure",
+            p("If the structure of the protein is available, upload the pdb file:"),
+            fileInput(inputId = "pdb_file",
+                      label = "PDB file: ",
+                      accept = ".pdb"),
+            checkboxInput(inputId = "if_spin_structure",
+                          label = "Spin the structure?",
+                          value = FALSE),
+            fancy_icon = "cogs"
+          ),
         ),
         mainPanel(
           tabsetPanel(
@@ -225,7 +236,6 @@ app_ui <- function(request) {
                   ),
                   column(
                     width = 3,
-
                     br(),
                     br(),
                     img(src='./www/rgb_plaster.png', width = "80%",  align = "left")
@@ -264,7 +274,7 @@ app_ui <- function(request) {
             ),
             tabPanel(
               "Structure",
-              # r3dmol::r3dmolOutput("protein_structure")
+              r3dmol::r3dmolOutput("protein_structure")
             )
           )
         )
