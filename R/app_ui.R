@@ -194,9 +194,6 @@ app_ui <- function(request) {
             fileInput(inputId = "pdb_file",
                       label = "PDB file: ",
                       accept = ".pdb"),
-            checkboxInput(inputId = "if_spin_structure",
-                          label = "Spin the structure?",
-                          value = FALSE),
             fancy_icon = "cogs"
           ),
         ),
@@ -212,19 +209,19 @@ app_ui <- function(request) {
                     super_girafeOutput(outputId = "estimated_k_hires_plot_out", height = '90%'),
                     # plotOutput_h("hires_mono_plot_out"),
                     super_girafeOutput(outputId = "hires_components_plot_out", height = '90%'),
-                    ggiraph::girafeOutput("plot_cov_class_plot", height = '90%'),
+                    super_girafeOutput("plot_cov_class_plot", height = '90%'),
                     fluidRow(
                       column(
                         width = 4,
-                        ggiraph::girafeOutput("plot_3_exp_map_v2_plot", height = '90%')
+                        super_girafeOutput("plot_3_exp_map_v2_plot", height = '90%')
                       ),
                       column(
                         width = 4,
-                        ggiraph::girafeOutput("plot_n_plot", height = '90%')
+                        super_girafeOutput("plot_n_plot", height = '90%')
                       ),
                       column(
                         width = 4,
-                        ggiraph::girafeOutput("plot_rss_hist_plot", height = '90%')
+                        super_girafeOutput("plot_rss_hist_plot", height = '90%')
                       )
                     ),
                     fluidRow(
@@ -254,6 +251,9 @@ app_ui <- function(request) {
               DT::dataTableOutput("params_list_data"),
               downloadButton("download_fit_params_table", "Save table (.csv)"),
               br(),
+              br(),
+              p("Click on the peptide in the table to see the uptake curves below!"),
+              br(),
               splitLayout(
                 ggiraph::girafeOutput("plot_selected_uc_1"),
                 ggiraph::girafeOutput("plot_selected_uc_2")
@@ -274,7 +274,9 @@ app_ui <- function(request) {
             ),
             tabPanel(
               "Structure",
-              r3dmol::r3dmolOutput("protein_structure")
+              br(),
+              r3dmol::r3dmolOutput("protein_structure", width = "100%", height = "1000px"),
+              p("To make the image of the structure, set the protein in desired position, stop the spinning and make a screen shot. ")
             )
           )
         )

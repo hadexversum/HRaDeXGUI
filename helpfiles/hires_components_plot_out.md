@@ -8,7 +8,6 @@ Starting from the bottom: red (fast) component, green (medium) and blue (compone
 
 If the fitted function is a two-component function, one of the bar is white ($n_i = 0$). If it is one-component function, two bars are white. If the peptide was classified as no exchange case, black color is in all three bars to distinquish this from cases with one or two white elements.
 
-
 ## How to interpret this results?
 
 The tendency of exchange can be spotted, regions that have strong medium exchange component etc. 

@@ -525,8 +525,7 @@ app_server <- function(input, output, session) {
     validate(need(input[["do_run"]] > 0, "Run the analysis by pressing the button on the left."))
 
     HRaDeX::plot_3d_structure_hires(hires_params = hires_params(),
-                                    pdb_file_path = input[["pdb_file"]][["datapath"]],
-                                    spin = input[["if_spin_structure"]])
+                                    pdb_file_path = input[["pdb_file"]][["datapath"]])
   })
 
   output[["protein_structure"]] <- r3dmol::renderR3dmol({
