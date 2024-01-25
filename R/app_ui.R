@@ -247,7 +247,16 @@ app_ui <- function(request) {
               )
               ),
             tabPanel(
-              "Params",
+              "Hires params",
+              br(),
+              p("Table presents the classification results on residue level."),
+              DT::dataTableOutput("hires_params_data"),
+              downloadButton("download_hires_params_data", "Save table (.csv)"),
+            ),
+            tabPanel(
+              "Fit Params",
+              br(),
+              p("Table presents the classification results on peptide level."),
               DT::dataTableOutput("params_list_data"),
               downloadButton("download_fit_params_table", "Save table (.csv)"),
               br(),

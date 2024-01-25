@@ -381,9 +381,54 @@ app_server <- function(input, output, session) {
     }
   )
 
-  #################
-  ## TAB: PARAMS ##
-  #################
+  #######################
+  ## TAB: HIRES PARAMS ##
+  #######################
+  
+  output[["hires_params_data"]] <- DT::renderDataTable({
+    
+    # browser()
+    
+    tmp <- dplyr::mutate(hires_params(),
+                  n_1 = formatC(n_1, 2),
+                  n_2 = formatC(n_2, 2),
+                  n_3 = formatC(n_3, 2),
+                  k_est = formatC(k_est, 4))
+    
+    tmp[is.na(tmp[["color"]]), "color"] <- "#D3D3d3"
+
+    dt <- DT::datatable(data = tmp,
+                        class = "table-bordered table-condensed",
+                        extensions = "Buttons",
+                        selection = "single",
+                        options = list(pageLength = 10,
+                                       dom = "tip",
+                                       autoWidth = TRUE,
+                                       columnDefs = list(list(targets = 1, visible = FALSE)),
+                                       target = 'cell'),
+                        filter = "bottom",
+                        rownames = FALSE)
+    
+    dt_length <- nrow(tmp)
+    
+    DT::formatStyle(dt, "position",
+                    backgroundColor = DT::styleEqual(c(1:dt_length), tmp[["color"]]))
+    
+  })
+  
+  output[["download_hires_params_data"]] <- downloadHandler(
+    filename = function(){
+      paste0("hires_data_", fit_protein(),"-", fit_state(), ".csv")
+    },
+    content = function(file){
+      write.csv(hires_params(), file)
+    }
+  )
+  
+  
+  #####################
+  ## TAB: FIT PARAMS ##
+  #####################
 
   output[["params_list_data"]] <- DT::renderDataTable({
 
@@ -428,6 +473,8 @@ app_server <- function(input, output, session) {
     }
   )
 
+  ##
+  
   output[["plot_selected_uc_1"]] <- ggiraph::renderGirafe({
 
     validate(need(!is.null(input[["params_list_data_rows_selected"]]), ""))
