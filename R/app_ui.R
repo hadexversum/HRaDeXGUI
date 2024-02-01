@@ -10,6 +10,7 @@ app_ui <- function(request) {
 
     golem_add_external_resources(),
     apply_ui_settings(),
+    shinyjs::useShinyjs(),
     # Your application UI logic
     fluidPage(
       br(),
@@ -42,16 +43,37 @@ app_ui <- function(request) {
           # mod_settings_state_ui("fit_state", "SINGLE"),
           collapsible_card(
             title = "Uptake calculations",
-            selectizeInput_h(
-              inputId = "fit_state",
-              label = "Select state"
-            ),
-            checkboxInput_h(
-              inputId = "replicate",
-              label = "Use replicate data?",
-              value = FALSE
+            fluidRow(
+              column(width = 6, 
+                     selectizeInput_h(
+                       inputId = "fit_state",
+                       label = "Select state: "
+                     ),
+                     checkboxInput_h(
+                       inputId = "replicate",
+                       label = "Use replicate data?",
+                       value = FALSE
+                     )),
+              column(width = 6)
             ),
             fancy_icon = "cogs"
+          ),
+          br(),
+          ## moving the start of the sequence
+          collapsible_card(
+            title = "Sequence",init_collapsed = T,
+            p("Sequence from the experimental data:"),
+            textOutput("protein_sequence_file"),
+            br(),
+            p("Sequence from the PDB file: "),
+            textOutput("protein_sequence_pdb"),
+            br(),
+            numericInput(inputId = "protein_start",
+                         label = "Move the start of the sequence?",
+                         value = 1),
+            div(id = "part_changed_sequence",
+                p("Sequence after change:"),
+                textOutput("sequence_file_moved"))
           ),
           br(),
           ## control settings

@@ -76,6 +76,59 @@ app_server <- function(input, output, session) {
   })
 
   ######################
+  ###### SEQUENCE ######
+  ######################
+  
+  output[["protein_sequence_file"]] <- renderText({
+    
+    # browser()
+    HaDeX::reconstruct_sequence(dat())
+    
+  })
+  
+  output[["protein_sequence_pdb"]] <- renderText({
+    
+    if(is.null(input[["pdb_file"]])){
+      
+      "PDB file is not provided!"
+      
+    } else {
+      
+      paste0(bio3d::pdbseq(bio3d::read.pdb(input[["pdb_file"]][["datapath"]])), collapse = "")
+      
+    }
+    
+  })
+  
+  observe({
+    
+    if(input[["protein_start"]] == 1){
+      shinyjs::hide(id = "part_changed_sequence")
+    }
+    
+  })
+  
+  observe({
+    
+    if(input[["protein_start"]] != 1){
+      shinyjs::show(id = "part_changed_sequence")
+    }
+  })
+  
+  dat_2 <- reactive({
+    
+    HRaDeX::move_dataset(dat(),
+                         move = input[["protein_start"]] - 1)
+  })
+  
+  output[["sequence_file_moved"]] <- renderText({
+    
+    
+    HaDeX::reconstruct_sequence(dat_2())
+    
+  })
+  
+  ######################
   ####### PARAMS #######
   ######################
 
