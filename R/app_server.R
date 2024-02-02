@@ -79,14 +79,19 @@ app_server <- function(input, output, session) {
   ###### SEQUENCE ######
   ######################
   
-  output[["protein_sequence_file"]] <- renderText({
+  sequence_file <- reactive({
     
-    # browser()
-    HaDeX::reconstruct_sequence(dat())
+    HaDeX::reconstruct_sequence(dat_raw())
     
   })
   
-  output[["protein_sequence_pdb"]] <- renderText({
+  output[["protein_sequence_file"]] <- renderText({
+    
+    sequence_file()
+    
+  })
+  
+  sequence_pdb <- reactive({
     
     if(is.null(input[["pdb_file"]])){
       
@@ -97,6 +102,17 @@ app_server <- function(input, output, session) {
       paste0(bio3d::pdbseq(bio3d::read.pdb(input[["pdb_file"]][["datapath"]])), collapse = "")
       
     }
+    
+  })
+  
+  ##
+  
+  output[["protein_sequence_pdb"]] <- renderText({
+    
+    # browser()
+    sequence_pdb() 
+    
+    
     
   })
   
@@ -115,16 +131,10 @@ app_server <- function(input, output, session) {
     }
   })
   
-  dat_2 <- reactive({
-    
-    HRaDeX::move_dataset(dat(),
-                         move = input[["protein_start"]] - 1)
-  })
-  
   output[["sequence_file_moved"]] <- renderText({
     
     
-    HaDeX::reconstruct_sequence(dat_2())
+    HaDeX::reconstruct_sequence(dat())
     
   })
   
@@ -132,7 +142,14 @@ app_server <- function(input, output, session) {
   ####### PARAMS #######
   ######################
 
-  dat <- mod_input_data_server("input_data")
+  dat_raw <- mod_input_data_server("input_data")
+  
+  dat <- reactive({
+    
+    HRaDeX::move_dataset(dat_raw(),
+                         move = input[["protein_start"]] - 1)
+    
+  })
 
   fit_k_params <- eventReactive(input[["do_run"]], {
 

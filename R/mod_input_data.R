@@ -49,7 +49,7 @@ mod_input_data_server <- function(id){
         example_data
       } else {
         validate(need(try({
-          file <- HaDeX::read_hdx(data_file[["datapath"]])
+          file <- read.csv(data_file[["datapath"]], header = T)
         }), "File does not fullfill requirements. Check file requirements!"))
         file
       }
@@ -57,16 +57,26 @@ mod_input_data_server <- function(id){
 
     data_source <- reactive({ attr(dat_raw(), "source") })
 
+    file_protein <- reactive({ unique(dat_raw()[["Protein"]])})
+    
     output[["data_file_info"]] <- renderText({
       paste0(
         if (is.null(input[["data_file"]]))
           "Example file: A2.csv"
         else "Supplied file is valid.",
+        "\nFound protein: ", file_protein(), 
         "\nDetected data source: ", data_source()
       )
     })
 
-  dat <- reactive( dat_raw() ) # ignoring hdexaminer for now
+  dat_cleaned <- reactive({
+    
+    dplyr::mutate(dat_raw(),
+                  Exposure = round(Exposure, 3))
+    
+  })
+  
+  dat <- reactive( dat_cleaned() ) # ignoring hdexaminer for now
 
   return(dat)
 
