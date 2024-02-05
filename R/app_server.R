@@ -131,11 +131,41 @@ app_server <- function(input, output, session) {
     }
   })
   
-  output[["sequence_file_moved"]] <- renderText({
-    
+  sequence_final <- reactive({
     
     HaDeX::reconstruct_sequence(dat())
     
+  })
+
+  
+  sequence_length <- reactive({
+    
+    max(nchar(sequence_pdb()), nchar(sequence_final())) +  1
+    
+  })
+  ##
+  
+  observe({
+    if(is.null(input[["pdb_file"]])) shinyjs::hide(id = "part_alignement")
+  })
+  
+  observe({
+    if(!is.null(input[["pdb_file"]])) shinyjs::show(id = "part_alignement")
+  })
+  
+  ##
+  
+  output[["pdb_file_alignement"]] <- renderPrint({
+
+    Biostrings::pairwiseAlignment(sequence_pdb(),
+                                  sequence_file())
+    
+  })
+  
+  ##
+  
+  output[["sequence_file_moved"]] <- renderText({
+    sequence_final()
   })
   
   ######################
@@ -379,7 +409,8 @@ app_server <- function(input, output, session) {
   hires_params <- reactive({
 
     HRaDeX::calculate_hires(list_params(),
-                            fractional = use_fractional())
+                            fractional = use_fractional(),
+                            protein_length = sequence_length())
 
   })
 
