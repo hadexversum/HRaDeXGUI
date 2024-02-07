@@ -9,7 +9,7 @@ app_server <- function(input, output, session) {
   # apply_server_settings()
   shinyhelper::observe_helpers(withMathJax = TRUE)
 
-  p_states_chosen_protein <- reactive(unique(dat()[["State"]]))
+  p_states_chosen_protein <- reactive(unique(dat_raw()[["State"]]))
 
   observe({
     updateSelectInput(
@@ -20,7 +20,7 @@ app_server <- function(input, output, session) {
     )
   })
 
-  p_times <- reactive(unique(dat()[["Exposure"]]))
+  p_times <- reactive(unique(dat_raw()[["Exposure"]]))
 
   observe({
     updateSelectInput(
@@ -131,16 +131,18 @@ app_server <- function(input, output, session) {
     }
   })
   
-  sequence_final <- reactive({
+  
+  
+  sequence_moved <- reactive({
     
-    HaDeX::reconstruct_sequence(dat())
+    HaDeX::reconstruct_sequence(dat_moved())
     
   })
 
   
   sequence_length <- reactive({
     
-    max(nchar(sequence_pdb()), nchar(sequence_final())) +  1
+    max(nchar(sequence_pdb()), nchar(sequence_moved())) +  1
     
   })
   ##
@@ -165,7 +167,7 @@ app_server <- function(input, output, session) {
   ##
   
   output[["sequence_file_moved"]] <- renderText({
-    sequence_final()
+    sequence_moved()
   })
   
   ######################
@@ -174,13 +176,25 @@ app_server <- function(input, output, session) {
 
   dat_raw <- mod_input_data_server("input_data")
   
-  dat <- reactive({
+  dat_moved <- reactive({
     
     HRaDeX::move_dataset(dat_raw(),
                          move = input[["protein_start"]] - 1)
     
   })
+  
+  
+  
+  dat <- eventReactive(input[["do_run"]], {
+    
+    
+    if(params_ready()) { dat_moved() }
+      else { dat_raw() }
+    
+  })
 
+  #
+  
   fit_k_params <- eventReactive(input[["do_run"]], {
 
     validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
@@ -195,7 +209,7 @@ app_server <- function(input, output, session) {
 
   fit_protein <- reactive({
 
-    unique(dplyr::filter(dat(), State == fit_state())[["Protein"]])
+    unique(dplyr::filter(dat_raw(), State == fit_state())[["Protein"]])
 
   })
 
@@ -205,6 +219,12 @@ app_server <- function(input, output, session) {
 
     input[["fractional"]]
 
+  })
+  
+  move_protein_start <- eventReactive(input[["do_run"]],{
+    
+    validate(need(input[["do_run"]]>0, "Initiate analysis by clicking the button."))
+    input[["protein_start"]] - 1
   })
 
   ##
@@ -319,6 +339,11 @@ app_server <- function(input, output, session) {
   observe(
     if(input[["is_FD"]] != fd_check()) params_ready(-1)
   )
+  
+  observe(
+    if(input[["protein_start"]] - 1 != move_protein_start()) params_ready(-1)
+  )
+  
   # observe({
   #   if(state_after_button() != s_fit_state %()% state) {
   #     params_ready(-1)
@@ -359,7 +384,7 @@ app_server <- function(input, output, session) {
   })
 
   observe({
-    if(all(params_fixed() == fit_k_params()) & input[["fit_maxiter"]] == fit_control()[["maxiter"]] & input[["fit_scale"]] == fit_control()[["scale"]] & input[["type"]] == workflow_type() & fit_state() == input[["fit_state"]] & p_time_0() == as.numeric(input[["time_0"]]) & p_time_100() == as.numeric(input[["time_100"]]) & input[["is_FD"]] == fd_check() & use_fractional() == input[["fractional"]] & use_replicate() == input[["replicate"]]) params_ready(1)
+    if(all(input[["protein_start"]]-1 == move_protein_start() & params_fixed() == fit_k_params()) & input[["fit_maxiter"]] == fit_control()[["maxiter"]] & input[["fit_scale"]] == fit_control()[["scale"]] & input[["type"]] == workflow_type() & fit_state() == input[["fit_state"]] & p_time_0() == as.numeric(input[["time_0"]]) & p_time_100() == as.numeric(input[["time_100"]]) & input[["is_FD"]] == fd_check() & use_fractional() == input[["fractional"]] & use_replicate() == input[["replicate"]]) params_ready(1)
   })
 
   ## checks
