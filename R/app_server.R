@@ -187,9 +187,7 @@ app_server <- function(input, output, session) {
   
   dat <- eventReactive(input[["do_run"]], {
     
-    
-    if(params_ready()) { dat_moved() }
-      else { dat_raw() }
+    dat_moved()
     
   })
 
