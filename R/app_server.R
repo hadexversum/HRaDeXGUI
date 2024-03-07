@@ -142,7 +142,7 @@ app_server <- function(input, output, session) {
   
   sequence_length <- reactive({
     
-    max(nchar(sequence_pdb()), nchar(sequence_moved())) +  1
+    max(nchar(sequence_pdb()), nchar(sequence_moved()))
     
   })
   ##
