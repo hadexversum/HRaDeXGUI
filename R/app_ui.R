@@ -219,7 +219,7 @@ app_ui <- function(request) {
             p("If the structure of the protein is available, upload the pdb file:"),
             fileInput(inputId = "pdb_file",
                       label = "PDB file: ",
-                      accept = ".pdb"),
+                      accept = c(".pdb", ".cif")),
             fancy_icon = "cogs"
           ),
         ),
@@ -312,6 +312,14 @@ app_ui <- function(request) {
               br(),
               r3dmol::r3dmolOutput("protein_structure", width = "100%", height = "1000px"),
               p("To make the image of the structure, set the protein in desired position, stop the spinning and make a screen shot. ")
+            ),
+            tabPanel(
+              "About", 
+              br(),
+              wellPanel(
+                includeMarkdown(app_sys("app/man/about.md"))
+              )
+              
             )
           )
         )
