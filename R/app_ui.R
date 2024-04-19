@@ -54,7 +54,12 @@ app_ui <- function(request) {
                        label = "Use replicate data?",
                        value = FALSE
                      )),
-              column(width = 6)
+              column(width = 6,
+                     numericInput_h(inputId = "omit_residue",
+                                    label = "Omit peptides first residues?",
+                                    value = 0, 
+                                    min = 0, max = 2)
+                     )
             ),
             fancy_icon = "cogs"
           ),
@@ -231,6 +236,13 @@ app_ui <- function(request) {
                 fluidRow(
                   column(
                     width = 9,
+                    br(),
+                    wellPanel(
+                      radioButtons(inputId = "hires_method",
+                                   label = "Select method of data aggregation:",
+                                   choices = c("Shortest peptide" = "shortest",
+                                               "Weighted values inverse to peptide length" = "weiss"))
+                    ),
                     super_girafeOutput(outputId = "hires_plot_out", height = '90%'),
                     super_girafeOutput(outputId = "estimated_k_hires_plot_out", height = '90%'),
                     # plotOutput_h("hires_mono_plot_out"),

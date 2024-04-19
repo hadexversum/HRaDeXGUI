@@ -431,9 +431,12 @@ app_server <- function(input, output, session) {
 
   hires_params <- reactive({
 
+    # browser()
+    
     HRaDeX::calculate_hires(list_params(),
                             fractional = use_fractional(),
-                            protein_length = sequence_length())
+                            protein_length = sequence_length(),
+                            method = input[["hires_method"]])
 
   })
 
@@ -694,7 +697,7 @@ app_server <- function(input, output, session) {
 
     validate(need(!is.null(input[["pdb_file"]]), "Please provide pdb file to see the 3D structure."))
     validate(need(input[["do_run"]] > 0, "Run the analysis by pressing the button on the left."))
-
+    
     HRaDeX::plot_3d_structure_hires(hires_params = hires_params(),
                                     pdb_file_path = input[["pdb_file"]][["datapath"]])
   })
