@@ -241,7 +241,7 @@ app_ui <- function(request) {
                       radioButtons(inputId = "hires_method",
                                    label = "Select method of data aggregation:",
                                    choices = c("Shortest peptide" = "shortest",
-                                               "Weighted values inverse to peptide length" = "weiss"))
+                                               "Weighted values inverse to peptide length" = "weighted"))
                     ),
                     super_girafeOutput(outputId = "hires_plot_out", height = '90%'),
                     super_girafeOutput(outputId = "estimated_k_hires_plot_out", height = '90%'),
