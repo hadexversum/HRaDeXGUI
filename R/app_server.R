@@ -178,14 +178,16 @@ app_server <- function(input, output, session) {
   
   dat_moved <- reactive({
     
-    HRaDeX::move_dataset(dat_raw(),
-                         move = input[["protein_start"]] - 1)
+    HRaDeX::omit_amino(HRaDeX::move_dataset(dat_raw(),
+                                            move = input[["protein_start"]] - 1) ,
+                       omit = as.numeric(input[["omit_residue"]]))
     
   })
   
   
   
   dat <- eventReactive(input[["do_run"]], {
+    
     
     dat_moved()
     

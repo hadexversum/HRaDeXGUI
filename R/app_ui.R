@@ -55,10 +55,10 @@ app_ui <- function(request) {
                        value = FALSE
                      )),
               column(width = 6,
-                     numericInput_h(inputId = "omit_residue",
-                                    label = "Omit peptides first residues?",
-                                    value = 0, 
-                                    min = 0, max = 2)
+                     super_selectInput(inputId = "omit_residue",
+                                   label = "Omit peptides first residues?",
+                                   choices = c(0, 1, 2),
+                                   selected = 0)
                      )
             ),
             fancy_icon = "cogs"
