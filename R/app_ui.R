@@ -23,7 +23,20 @@ app_ui <- function(request) {
           br(),
           ## input data
           mod_input_data_ui("input_data"),
-          span("Be careful! This app is still under development.", style="color:red"),
+          fluidPage(
+            fluidRow(
+            column(width = 8,
+              span("Be careful! This app is still under development.  ", style="color:red"),
+              span("For more information check the documentation!", style="color:black"),
+            ),
+            column(width = 4,
+                   align = 'right',
+              actionButton(inputId = "go_docs",
+                           label = "Documentation",
+                           icon = icon("book"),
+                           onclick ="window.open('https://hadexversum.github.io/HRaDeX/')")
+            ))
+          ),
           br(),
           br(),
           ## run app
@@ -270,10 +283,13 @@ app_ui <- function(request) {
                     )
                   ),
                   column(
-                    width = 3,
+                    width = 2,
                     br(),
-                    br(),
-                    img(src='./www/rgb_plaster.png', width = "80%",  align = "left")
+                    img(src='./www/rgb_plaster.png', width = "100%",  align = "left"),
+                    br(), 
+                    hr(),
+                    p("Prolines are known to not undergo the exchange and are marked in black.",
+                      width = "80%")
                   )
                 ),
 
