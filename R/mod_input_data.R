@@ -46,7 +46,7 @@ mod_input_data_server <- function(id){
       data_file <- input[["data_file"]]
 
       if (is.null(data_file)) {
-        example_data
+        alpha_dat
       } else {
         validate(need(try({
           file <- read.csv(data_file[["datapath"]], header = T)
@@ -62,7 +62,7 @@ mod_input_data_server <- function(id){
     output[["data_file_info"]] <- renderText({
       paste0(
         if (is.null(input[["data_file"]]))
-          "Example file: A2.csv"
+          "Example file: alpha.csv"
         else "Supplied file is valid.",
         "\nFound protein: ", file_protein(), 
         "\nDetected data source: ", data_source()

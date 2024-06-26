@@ -55,7 +55,7 @@ hadex_with_spinner <- function(tag) shinycustomloader::withLoader(
 #' @param content name of the helpfile; if NULL no helper is created
 #'
 #' @examples
-#' hadex_wiht_helper(plotOutput("some_id"), "a-file")
+#' hadex_with_helper(plotOutput("some_id"), "a-file")
 #'
 #' @noRd
 hadex_with_helper <- function(tag, content) if (not_null(content)) shinyhelper::helper(
