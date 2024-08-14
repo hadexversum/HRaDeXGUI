@@ -131,7 +131,11 @@ app_server <- function(input, output, session) {
     }
   })
   
-  
+  data_source <- reactive({
+    
+    if(dat()[["Protein"]][[1]] == "db_eEF1Ba") "example"
+    else { "internal"}
+  })
   
   sequence_moved <- reactive({
     
@@ -181,7 +185,7 @@ app_server <- function(input, output, session) {
     HRaDeX::omit_amino(HRaDeX::move_dataset(dat_raw(),
                                             move = input[["protein_start"]] - 1) ,
                        omit = as.numeric(input[["omit_residue"]]))
-    
+  
   })
   
   
@@ -695,13 +699,29 @@ app_server <- function(input, output, session) {
   ## TAB: STRUCTURE ##
   #####################
 
+  pdb_file <- reactive({
+    
+    if(!is.null(input[["pdb_file"]])){
+      input[["pdb_file"]][["datapath"]]
+    } else if(data_source() == "example"){
+      system.file(package = "HRaDeX", "data/Model_eEF1Balpha.pdb")
+    } else {
+      validate(need(!is.null(input[["pdb_file"]]), "Please provide pdb file to see the 3D structure."))
+    }
+    
+  })
+  
+  ##
+  
   protein_structure_out <- reactive({
 
-    validate(need(!is.null(input[["pdb_file"]]), "Please provide pdb file to see the 3D structure."))
+    # validate(need(!is.null(input[["pdb_file"]]), "Please provide pdb file to see the 3D structure."))
     validate(need(input[["do_run"]] > 0, "Run the analysis by pressing the button on the left."))
     
+    browser()
+    
     HRaDeX::plot_3d_structure_hires(hires_params = hires_params(),
-                                    pdb_file_path = input[["pdb_file"]][["datapath"]])
+                                    pdb_file_path = pdb_file())
   })
 
   output[["protein_structure"]] <- r3dmol::renderR3dmol({
