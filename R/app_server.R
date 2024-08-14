@@ -7,7 +7,7 @@
 app_server <- function(input, output, session) {
 
   # apply_server_settings()
-  shinyhelper::observe_helpers(withMathJax = TRUE)
+  shinyhelper::observe_helpers(help_dir = system.file(package = "HRaDeXGUI", "helpfiles/"), withMathJax = TRUE)
 
   p_states_chosen_protein <- reactive(unique(dat_raw()[["State"]]))
 
@@ -717,8 +717,6 @@ app_server <- function(input, output, session) {
 
     # validate(need(!is.null(input[["pdb_file"]]), "Please provide pdb file to see the 3D structure."))
     validate(need(input[["do_run"]] > 0, "Run the analysis by pressing the button on the left."))
-    
-    browser()
     
     HRaDeX::plot_3d_structure_hires(hires_params = hires_params(),
                                     pdb_file_path = pdb_file())
