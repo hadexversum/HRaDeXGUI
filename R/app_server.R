@@ -10,6 +10,8 @@ app_server <- function(input, output, session) {
   shinyhelper::observe_helpers(help_dir = system.file(package = "HRaDeXGUI", "helpfiles/"), withMathJax = TRUE)
 
   p_states_chosen_protein <- reactive(unique(dat_raw()[["State"]]))
+  
+  print(system.file(package = "HRaDeXGUI", "helpfiles/"))
 
   observe({
     updateSelectInput(
@@ -524,8 +526,11 @@ app_server <- function(input, output, session) {
     
     tmp <- dplyr::mutate(hires_params(),
                   n_1 = formatC(n_1, 2),
+                  k_1 = formatC(k_1, 2),
                   n_2 = formatC(n_2, 2),
+                  k_2 = formatC(k_2, 2),
                   n_3 = formatC(n_3, 2),
+                  k_3 = formatC(k_3, 2),
                   k_est = formatC(k_est, 4))
     
     tmp[is.na(tmp[["color"]]), "color"] <- "#D3D3d3"
