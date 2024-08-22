@@ -125,9 +125,21 @@ uiOutput_h <- hadex_decorate(shiny::uiOutput)
 dataTableOutput_h <- hadex_decorate(DT::dataTableOutput)
 girafeOutput_h <- hadex_decorate(ggiraph::girafeOutput)
 
+radioButtons_h <- function(inputId, label, ...)
+  hadex_decorate(shiny::radioButtons, is_output = FALSE)(inputId, label, ...)
+
+
 
 
 ## SUPERS
+
+super_radioButtons <- function(inputId, label, ...){
+  
+  shinyhelper::helper(shiny::radioButtons(inputId = inputId, 
+                                  label = label, ...),
+                      type = "markdown",
+                      content = inputId)
+}
 
 super_checkboxInput <- function(inputId, label, value, ...){
   

@@ -1,6 +1,6 @@
 Package: HRaDeXGUI
 Title: HRaDeX GUI
-Version: 0.1
+Version: 1.0
 Authors@R: c(
     person("Weronika", "Puchala", , "puchala.weronika@gmail.com", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0003-2163-1429")),

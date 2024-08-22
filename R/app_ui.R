@@ -207,7 +207,7 @@ app_ui <- function(request) {
             # plotOutput_h("k_params_plot"),
             p("The plot below shows the uptake curve based on the initial values with bounds for all the classes. It reflects the current state of the table above. "),
             hadex_with_spinner(uiOutput("k_params_plot")),
-            p("Besides that, there are two extreme cases defined by the rule of thumb: immediate exchange (fire red), and no exchange (black). For more information see the documentation and help.  "),
+            p("Besides that, there is an additional class defined by the rule of thumb: `very slow` - almost no exchange (black). For more information see the documentation and help.  "),
             div(
               style = "display:inline-block; float:right",
               actionButton(inputId = "reset_class_def",
@@ -251,7 +251,7 @@ app_ui <- function(request) {
                     width = 9,
                     br(),
                     wellPanel(
-                      radioButtons(inputId = "hires_method",
+                      super_radioButtons(inputId = "hires_method",
                                    label = "Select method of data aggregation:",
                                    choices = c("Shortest peptide" = "shortest",
                                                "Weighted values inverse to peptide length" = "weighted"))
