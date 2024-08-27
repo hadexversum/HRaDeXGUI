@@ -7,11 +7,15 @@
 app_server <- function(input, output, session) {
 
   # apply_server_settings()
-  shinyhelper::observe_helpers(help_dir = system.file(package = "HRaDeXGUI", "helpfiles/"), withMathJax = TRUE)
-
+  # shinyhelper::observe_helpers(help_dir = system.file(package = "HRaDeXGUI", "helpfiles/"), withMathJax = TRUE)
+  shinyhelper::observe_helpers(help_dir = "/tmp/gui/helpfiles/", withMathJax = TRUE)
+  
   p_states_chosen_protein <- reactive(unique(dat_raw()[["State"]]))
   
+  print("***")
   print(system.file(package = "HRaDeXGUI", "helpfiles/"))
+  print(getwd())
+  print("***")
 
   observe({
     updateSelectInput(
