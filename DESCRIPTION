@@ -14,8 +14,10 @@ Imports:
     golem (>= 0.3.3),
     HRaDeX, 
     shiny (>= 1.7.4),
+    shinycustomloader,
     shinyhelper,
-    shinyjs
+    shinyjs,
+    r3dmol
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.1

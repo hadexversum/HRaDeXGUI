@@ -12,11 +12,6 @@ app_server <- function(input, output, session) {
   
   p_states_chosen_protein <- reactive(unique(dat_raw()[["State"]]))
   
-  print("***")
-  print(system.file(package = "HRaDeXGUI", "helpfiles/"))
-  print(getwd())
-  print("***")
-
   observe({
     updateSelectInput(
       session,
