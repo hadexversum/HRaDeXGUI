@@ -41,6 +41,8 @@ mod_input_data_ui <- function(id){
 mod_input_data_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
+    shinyhelper::observe_helpers(help_dir = "/tmp/gui/helpfiles/", withMathJax = TRUE)
 
     dat_raw <- reactive({
       data_file <- input[["data_file"]]
