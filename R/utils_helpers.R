@@ -170,3 +170,13 @@ super_selectInput <- function(inputId, ...){
     content = inputId
   )
 }
+
+super_fileInput <- function(inputId, ...){
+  
+  shinyhelper::helper(
+    fileInput(inputId = inputId, ...),
+    type = "markdown",
+    content = inputId
+  )
+  
+}

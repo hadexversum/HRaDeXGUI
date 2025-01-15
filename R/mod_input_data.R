@@ -15,7 +15,7 @@ mod_input_data_ui <- function(id){
   wellPanel(
     # fillRow(
       # flex = c(NA, 1),
-      fileInput(
+      super_fileInput(
         inputId = ns("data_file"),
         label = "Choose file:",
         multiple = FALSE,
