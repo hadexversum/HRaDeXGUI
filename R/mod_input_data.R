@@ -47,16 +47,26 @@ mod_input_data_server <- function(id){
     dat_raw <- reactive({
       data_file <- input[["data_file"]]
 
+      message <- "Check file requirements!"
+      
       if (is.null(data_file)) {
         alpha_dat
       } else {
-        validate(need(try({
-          file <- read.csv(data_file[["datapath"]], header = T)
-        }), "File does not fullfill requirements. Check file requirements!"))
-        file
+    
+        tryCatch({
+          x_file <- HaDeX::read_hdx(data_file[["datapath"]])
+        }, error = function(e){
+          message <<- e[["message"]]
+            }, silent = TRUE
+        )
+        
+        validate(need(exists("x_file"), message))
+        x_file
+        
       }
     })
 
+    
     data_source <- reactive({ attr(dat_raw(), "source") })
 
     file_protein <- reactive({ unique(dat_raw()[["Protein"]])})
