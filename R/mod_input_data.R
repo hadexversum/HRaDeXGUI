@@ -47,7 +47,7 @@ mod_input_data_server <- function(id){
     dat_raw <- reactive({
       data_file <- input[["data_file"]]
 
-      message <- "Check file requirements!"
+      message <- "Check file requirements! "
       
       if (is.null(data_file)) {
         alpha_dat
@@ -56,7 +56,7 @@ mod_input_data_server <- function(id){
         tryCatch({
           x_file <- HaDeX::read_hdx(data_file[["datapath"]])
         }, error = function(e){
-          message <<- e[["message"]]
+          message <<- paste0(message, e[["message"]])
             }, silent = TRUE
         )
         

@@ -26,4 +26,6 @@ Please make sure that there is no empty line on the bottom of the file, as it af
 
 Example file is available to check [here](https://github.com/hadexversum/HaDeX/blob/master/inst/HaDeX/data/KD_190304_Nucb2_EDTA_CaCl2_test02_clusterdata.csv).
 
+For more information consult this [article](https://hadexversum.github.io/HRaDeX/articles/input_data.html).
+
 *In the new version other data formats will be accepted.*
