@@ -400,5 +400,6 @@ golem_add_external_resources <- function() {
 #' @noRd
 apply_ui_settings <- function(){
 
-
+  options(shiny.maxRequestSize = 10 * 1024^2) 
+  
 }
