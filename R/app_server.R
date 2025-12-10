@@ -463,12 +463,13 @@ app_server <- function(input, output, session) {
       "If you wish, you can export colouring commands for ChimeraX for further personalization of the 3D structure. Just select appropriate parameters!",
       br(),
       wellPanel(
-         radioButtons(inputId = "chimerax_export_mode",
-                    label = "Select coloring mode:",
-                    choices = c("classification", "dominant"),
-                    selected = "classification"),
+        checkboxInput(inputId = "chimerax_export_dominant",
+                    label = "Export only dominant color?",
+                    value = FALSE),
        textInput(inputId = "chimerax_export_chain",
-                 label = "Select chain:")
+                 label = "Select chain:",
+                 value = "A"),
+       "To produce commands for multiple chains at once, list them separated by coma, no spaces. e.q. a,b"
       ),
       downloadButton(outputId = "chimerax_export_download",
                      label = "Download file")
@@ -478,9 +479,24 @@ app_server <- function(input, output, session) {
   
   chimerax_coloring_commands <- reactive({
     
+    HRaDeX::prepare_chimera_commands(hires_params = hires_params(),
+                                     dominant = input[["chimerax_export_dominant"]],
+                                     chains = input[["chimerax_export_chain"]],
+                                     state = fit_state())
+    
     
     
   })
+  
+  output[["chimerax_export_download"]] <- downloadHandler(
+    
+    filename = paste0(fit_protein(), "-", fit_state(), ".txt"),
+    
+    content = function(file){
+      writeLines(chimerax_coloring_commands(), file)
+      
+    }
+  )
   
   ##
 
