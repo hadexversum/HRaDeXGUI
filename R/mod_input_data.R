@@ -54,7 +54,7 @@ mod_input_data_server <- function(id){
       } else {
     
         tryCatch({
-          x_file <- HaDeX::read_hdx(data_file[["datapath"]])
+          x_file <- HaDeX2::read_hdx(data_file[["datapath"]])
         }, error = function(e){
           message <<- paste0(message, e[["message"]])
             }, silent = TRUE

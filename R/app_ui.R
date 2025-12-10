@@ -257,10 +257,18 @@ app_ui <- function(request) {
                     width = 9,
                     br(),
                     wellPanel(
-                      super_radioButtons(inputId = "hires_method",
-                                   label = "Select method of data aggregation:",
-                                   choices = c("Shortest peptide" = "shortest",
-                                               "Weighted values inverse to peptide length" = "weighted"))
+                      fluidRow(
+                        column(9,
+                          super_radioButtons(inputId = "hires_method",
+                                             label = "Select method of data aggregation:",
+                                             choices = c("Shortest peptide" = "shortest",
+                                                         "Weighted values inverse to peptide length" = "weighted"))
+                        ),
+                        column(3,
+                               actionButton(inputId = "chimera_export",
+                                            label = "Export code for ChimeraX"))
+                      )
+                      
                     ),
                     super_girafeOutput(outputId = "hires_plot_out", height = '90%'),
                     super_girafeOutput(outputId = "estimated_k_hires_plot_out", height = '90%'),

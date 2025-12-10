@@ -82,7 +82,7 @@ app_server <- function(input, output, session) {
   
   sequence_file <- reactive({
     
-    HaDeX::reconstruct_sequence(dat_raw())
+    HaDeX2::reconstruct_sequence(dat_raw())
     
   })
   
@@ -140,7 +140,7 @@ app_server <- function(input, output, session) {
   
   sequence_moved <- reactive({
     
-    HaDeX::reconstruct_sequence(dat_moved())
+    HaDeX2::reconstruct_sequence(dat_moved())
     
   })
 
@@ -453,6 +453,36 @@ app_server <- function(input, output, session) {
                        interactive = T)
 
   })
+  
+  ## chimerax export
+  
+  observeEvent(input[["chimera_export"]], {
+    
+    showModal(modalDialog(
+      title = "ChimeraX export",
+      "If you wish, you can export colouring commands for ChimeraX for further personalization of the 3D structure. Just select appropriate parameters!",
+      br(),
+      wellPanel(
+         radioButtons(inputId = "chimerax_export_mode",
+                    label = "Select coloring mode:",
+                    choices = c("classification", "dominant"),
+                    selected = "classification"),
+       textInput(inputId = "chimerax_export_chain",
+                 label = "Select chain:")
+      ),
+      downloadButton(outputId = "chimerax_export_download",
+                     label = "Download file")
+    ))
+    
+  })
+  
+  chimerax_coloring_commands <- reactive({
+    
+    
+    
+  })
+  
+  ##
 
   hires_components_plot <- reactive({
 
